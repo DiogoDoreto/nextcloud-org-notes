@@ -1,0 +1,11 @@
+{
+    "name": "orgnotes/orgnotes",
+    "description": "Org Mode notes for Nextcloud",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "OCA\\OrgNotes\\": "lib/"
+        }
+    },
+    "require": {}
+}
