@@ -62,6 +62,10 @@ export default defineComponent({
 
 <style scoped>
 .file-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background-color: var(--color-main-background);
 	display: flex;
 	align-items: baseline;
 	flex-wrap: wrap;
