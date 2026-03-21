@@ -5,9 +5,9 @@
 			<template v-if="selectedFileData">
 				<header class="file-header">
 					<h2 class="file-header__name">{{ selectedFileData.name.replace(/\.org$/i, '') }}</h2>
-					<span class="file-header__mtime">Last updated {{ formattedMtime }}</span>
+					<span v-if="formattedMtime" class="file-header__mtime">Last updated {{ formattedMtime }}</span>
 				</header>
-				<OrgView :path="selectedFileData.path" :full-width="true" />
+				<OrgView :key="selectedFileData.path" :path="selectedFileData.path" :full-width="true" />
 			</template>
 			<NcEmptyContent v-else name="Select a file" description="Select a file from the sidebar to view it." />
 		</NcAppContent>
@@ -62,21 +62,25 @@ export default defineComponent({
 
 <style scoped>
 .file-header {
-	padding: 20px 20px 0;
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	column-gap: 16px;
+	padding: 16px 20px 12px calc(var(--default-clickable-area) + var(--app-navigation-padding, 4px) + 8px);
 	border-bottom: 1px solid var(--color-border);
-	margin-bottom: 0;
 }
 
 .file-header__name {
 	font-size: 1.5em;
 	font-weight: bold;
-	margin: 0 0 4px;
+	margin: 0;
+	flex: 1 1 auto;
 }
 
 .file-header__mtime {
 	font-size: 0.85em;
 	color: var(--color-text-maxcontrast);
-	display: block;
-	margin-bottom: 12px;
+	white-space: nowrap;
+	flex: 0 0 auto;
 }
 </style>
