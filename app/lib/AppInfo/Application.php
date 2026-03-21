@@ -33,7 +33,7 @@ class Application extends App implements IBootstrap {
 
         $dispatcher = $context->getServerContainer()->get(IEventDispatcher::class);
         $dispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
-            \OCP\Util::addScript(self::APP_ID, 'main');
+            \OCP\Util::addInitScript(self::APP_ID, 'main');
         });
     }
 }
