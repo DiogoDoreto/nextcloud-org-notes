@@ -1,5 +1,21 @@
-import { createAppConfig } from '@nextcloud/vite-config'
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-export default createAppConfig({
-    main: 'src/main.js',
+export default defineConfig({
+    plugins: [vue()],
+    build: {
+        outDir: 'js',
+        lib: {
+            entry: 'src/main.js',
+            name: 'orgnotes',
+            formats: ['iife'],
+            fileName: () => 'main.js',
+        },
+        rollupOptions: {
+            external: ['vue'],
+            output: {
+                globals: { vue: 'Vue' },
+            },
+        },
+    },
 })
