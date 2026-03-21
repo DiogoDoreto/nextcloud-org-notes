@@ -11,11 +11,6 @@ export default defineConfig({
             formats: ['iife'],
             fileName: () => 'main.js',
         },
-        rollupOptions: {
-            external: ['vue'],
-            output: {
-                globals: { vue: 'Vue' },
-            },
-        },
+        rollupOptions: {},
     },
 })
