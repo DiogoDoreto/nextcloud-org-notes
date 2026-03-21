@@ -1,9 +1,10 @@
 <template>
-	<NcAppNavigationItem :name="file.name" :to="{ query: { file: file.path } }" />
+	<NcAppNavigationItem :name="file.name" :active="isActive" @click="open" />
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 
 export default defineComponent({
@@ -16,6 +17,19 @@ export default defineComponent({
 			type: Object,
 			required: true,
 		},
+	},
+
+	setup(props) {
+		const route = useRoute()
+		const router = useRouter()
+
+		const isActive = computed(() => route.query.file === props.file.path)
+
+		function open() {
+			router.push({ query: { file: props.file.path } })
+		}
+
+		return { isActive, open }
 	},
 })
 </script>
