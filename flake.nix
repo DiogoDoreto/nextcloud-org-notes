@@ -26,7 +26,7 @@
           pnpmDeps = pkgs.fetchPnpmDeps {
             inherit (finalAttrs) pname version src;
             fetcherVersion = 3;
-            hash = "sha256-tNosNsUV5AQHCzHUdoK02DYtRmoqyOpIoV9R+5/ouo8=";
+            hash = "sha256-uoJEWZVETedEs/E82oA5FxOPTKeTEUT7g9/vEwKDUcc=";
           };
 
           nativeBuildInputs = [
@@ -44,7 +44,7 @@
           installPhase = ''
             runHook preInstall
             mkdir -p $out
-            cp -r appinfo lib templates js $out/
+            cp -r appinfo lib templates js img $out/
             runHook postInstall
           '';
         });

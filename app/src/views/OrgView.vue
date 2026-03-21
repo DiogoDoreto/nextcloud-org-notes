@@ -1,5 +1,5 @@
 <template>
-	<div class="org-viewer">
+	<div class="org-viewer" :class="{ 'org-viewer--full-width': fullWidth }">
 		<div v-if="loading" class="org-viewer__loading">
 			<span class="icon-loading" />
 		</div>
@@ -30,6 +30,10 @@ export default {
 		mime: {
 			type: String,
 			default: 'text/org',
+		},
+		fullWidth: {
+			type: Boolean,
+			default: false,
 		},
 	},
 
@@ -67,6 +71,11 @@ export default {
 	padding: 20px;
 	max-width: 860px;
 	margin: 0 auto;
+}
+
+.org-viewer--full-width {
+	max-width: none;
+	margin: 0;
 }
 
 .org-viewer__loading {

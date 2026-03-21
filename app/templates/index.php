@@ -1,3 +1,2 @@
-<div id="app">
-    <p>Org Notes is active</p>
-</div>
+<?php \OCP\Util::addScript('orgnotes', 'app'); ?>
+<div id="app"></div>

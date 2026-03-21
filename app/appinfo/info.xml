@@ -12,4 +12,11 @@
     <dependencies>
         <nextcloud min-version="29" max-version="33"/>
     </dependencies>
+    <navigations>
+        <navigation>
+            <name>Org Notes</name>
+            <route>orgnotes.page.index</route>
+            <icon>app.svg</icon>
+        </navigation>
+    </navigations>
 </info>

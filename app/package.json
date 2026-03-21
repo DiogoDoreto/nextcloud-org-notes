@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "vite build && vite build --config vite.config.app.js",
         "dev": "vite"
     },
     "dependencies": {
@@ -15,7 +15,8 @@
         "uniorg-parse": "^2.0.0",
         "uniorg-rehype": "^2.0.0",
         "unified": "^11.0.0",
-        "vue": "^3.4.0"
+        "vue": "^3.4.0",
+        "vue-router": "^4.0.0"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",

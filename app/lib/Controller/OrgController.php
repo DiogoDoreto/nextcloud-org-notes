@@ -21,6 +21,26 @@ class OrgController extends OCSController {
     /**
      * @NoAdminRequired
      */
+    public function listFiles(): DataResponse {
+        $userFolder = $this->rootFolder->getUserFolder($this->userId);
+        $files = $userFolder->searchByMime('text/org');
+        $result = [];
+        foreach ($files as $file) {
+            $path = $userFolder->getRelativePath($file->getPath());
+            if ($path !== null && str_starts_with($path, '/Notes/')) {
+                $result[] = [
+                    'path' => $path,
+                    'name' => $file->getName(),
+                    'mtime' => $file->getMTime(),
+                ];
+            }
+        }
+        return new DataResponse($result);
+    }
+
+    /**
+     * @NoAdminRequired
+     */
     public function getFile(string $path): DataResponse {
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);

@@ -18,6 +18,8 @@ cd app && pnpm run build   # outputs to app/js/
 nix build                  # outputs appinfo/ lib/ templates/ js/
 ```
 
+Note: after any code changes, ensure that nix build is successful
+
 ## Key decisions
 
 - **Vue 3** with `@vitejs/plugin-vue` — `@nextcloud/vite-config` was dropped because it bundles `@vitejs/plugin-vue2` and cannot compile Vue 3 SFCs
