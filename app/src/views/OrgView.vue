@@ -152,14 +152,19 @@ export default {
 }
 
 /* Definition lists */
+.org-viewer__content dl {
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	column-gap: 2ch;
+	row-gap: 0.25em;
+}
+
 .org-viewer__content dl > dt {
 	font-weight: bold;
-	margin-block-end: 0.25em;
 }
 
 .org-viewer__content dl > dd {
-	margin-inline-start: 2ch;
-	margin-block-end: 0.25em;
+	margin: 0;
 }
 
 /* Blockquote */
