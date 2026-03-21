@@ -6,6 +6,10 @@
       url = "github:Fission-AI/OpenSpec";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nextcloud-vue = {
+      url = "github:nextcloud-libraries/nextcloud-vue";
+      flake = false;
+    };
   };
   outputs =
     { nixpkgs, utils, ... }@inputs:
@@ -26,7 +30,7 @@
           pnpmDeps = pkgs.fetchPnpmDeps {
             inherit (finalAttrs) pname version src;
             fetcherVersion = 3;
-            hash = "sha256-uoJEWZVETedEs/E82oA5FxOPTKeTEUT7g9/vEwKDUcc=";
+            hash = "sha256-7M2Cu6f1SmT2vSQEVdwtE5oXBFKEpy/vzMhCiRzrcNU=";
           };
 
           nativeBuildInputs = [
@@ -57,6 +61,11 @@
             nodejs_22
             pnpm
           ];
+          shellHook = ''
+            mkdir -p deps
+            rm deps/nextcloud-vue
+            ln -sfn ${inputs.nextcloud-vue} deps/nextcloud-vue
+          '';
         };
       }
     );

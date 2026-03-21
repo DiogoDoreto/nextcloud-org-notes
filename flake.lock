@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "nextcloud-vue": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773992274,
+        "narHash": "sha256-7LOwIeB7+VV9zrMYBHc8A2WjpfMaGWWjcalaNYg9FWw=",
+        "owner": "nextcloud-libraries",
+        "repo": "nextcloud-vue",
+        "rev": "842ce2c9d47c33e73cc5c0474494098e862a1b0f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nextcloud-libraries",
+        "repo": "nextcloud-vue",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1773628058,
@@ -38,6 +54,7 @@
     },
     "root": {
       "inputs": {
+        "nextcloud-vue": "nextcloud-vue",
         "nixpkgs": "nixpkgs",
         "openspec": "openspec",
         "utils": "utils"

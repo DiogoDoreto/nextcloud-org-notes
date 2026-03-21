@@ -20,12 +20,9 @@ nix build                  # outputs appinfo/ lib/ templates/ js/
 
 Note: after any code changes, ensure that nix build is successful
 
-## Key decisions
+## Writing Vue 3 components
 
-- **Vue 3** with `@vitejs/plugin-vue` — `@nextcloud/vite-config` was dropped because it bundles `@vitejs/plugin-vue2` and cannot compile Vue 3 SFCs
-- **OCS API** (`/ocs/v2.php/apps/orgnotes/api/v1/file?path=...`) — preferred over plain REST for Nextcloud convention and automatic CSRF handling
-- **uniorg** over orga for Org parsing — closer to `org-element.el` spec fidelity
-- **CSS custom properties** for highlight.js theming — maps `.hljs-*` classes to Nextcloud vars so light/dark theme switching works automatically
+Always reuse exported components and utilities from `@nextcloud/vue`. You can find a copy of its source code for checking what's available at ./deps/nextcloud-vue/
 
 ## Nix notes
 
