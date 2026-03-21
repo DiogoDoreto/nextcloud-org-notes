@@ -90,8 +90,200 @@ export default {
 }
 </style>
 
-<!-- highlight.js theming via Nextcloud CSS custom properties (non-scoped so v-html content is styled) -->
+<!-- Content styles (non-scoped so v-html content is styled) -->
 <style>
+/* Typography baseline */
+.org-viewer__content {
+	line-height: 1.5;
+	overflow-wrap: break-word;
+	tab-size: 4;
+}
+
+/* Block margins */
+.org-viewer__content p,
+.org-viewer__content ul,
+.org-viewer__content ol,
+.org-viewer__content dl,
+.org-viewer__content blockquote,
+.org-viewer__content pre,
+.org-viewer__content table,
+.org-viewer__content hr {
+	margin-block-end: 1em;
+}
+
+/* First/last child margin reset */
+.org-viewer__content > :first-child,
+.org-viewer__content blockquote > :first-child {
+	margin-top: 0;
+}
+
+.org-viewer__content > :last-child,
+.org-viewer__content blockquote > :last-child {
+	margin-block-end: 0;
+}
+
+/* Headings */
+.org-viewer__content h1,
+.org-viewer__content h2,
+.org-viewer__content h3,
+.org-viewer__content h4,
+.org-viewer__content h5,
+.org-viewer__content h6 {
+	font-weight: bold;
+	margin-block-end: 0.5em;
+}
+
+.org-viewer__content h1 { font-size: 2em; }
+.org-viewer__content h2 { font-size: 1.5em; }
+.org-viewer__content h3 { font-size: 1.25em; }
+.org-viewer__content h4 { font-size: 1.1em; }
+.org-viewer__content h5 { font-size: 1em; }
+.org-viewer__content h6 { font-size: 0.9em; }
+
+/* Lists */
+.org-viewer__content ul {
+	list-style-type: disc;
+	padding-inline-start: 4ch;
+}
+
+.org-viewer__content ol {
+	list-style-type: decimal;
+	padding-inline-start: 4ch;
+}
+
+/* Definition lists */
+.org-viewer__content dl > dt {
+	font-weight: bold;
+	margin-block-end: 0.25em;
+}
+
+.org-viewer__content dl > dd {
+	margin-inline-start: 2ch;
+	margin-block-end: 0.25em;
+}
+
+/* Blockquote */
+.org-viewer__content blockquote {
+	border-inline-start: 2px solid var(--color-border-dark);
+	padding-inline-start: 1em;
+	color: var(--color-text-maxcontrast);
+}
+
+/* Horizontal rule */
+.org-viewer__content hr {
+	border: none;
+	border-top: 1px solid var(--color-border);
+	margin-block: 1.5em;
+}
+
+/* Links */
+.org-viewer__content a {
+	text-decoration: underline;
+	color: var(--color-primary-element);
+}
+
+/* Images */
+.org-viewer__content img {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Inline code and verbatim */
+.org-viewer__content code.inline-code,
+.org-viewer__content code.inline-verbatim {
+	font-family: monospace;
+	background: var(--color-background-dark);
+	padding: 0.1em 0.3em;
+	border-radius: var(--border-radius, 3px);
+}
+
+/* Code blocks */
+.org-viewer__content pre.src-block {
+	direction: ltr;
+}
+
+/* Verse blocks */
+.org-viewer__content pre.verse {
+	font-family: inherit;
+	font-style: italic;
+	white-space: pre-wrap;
+	border-inline-start: 2px solid var(--color-border-dark);
+	padding-inline-start: 1em;
+}
+
+/* Example blocks */
+.org-viewer__content div.example {
+	font-family: monospace;
+	background: var(--color-background-dark);
+	padding: 1em;
+	border-radius: var(--border-radius, 3px);
+}
+
+/* Center blocks */
+.org-viewer__content div.center {
+	text-align: center;
+}
+
+/* Tables */
+.org-viewer__content table {
+	border-collapse: collapse;
+	border: 1px solid var(--color-border-maxcontrast);
+}
+
+.org-viewer__content th,
+.org-viewer__content td {
+	padding: var(--default-grid-baseline, 4px);
+	border: 1px solid var(--color-border-maxcontrast);
+}
+
+.org-viewer__content th {
+	background: var(--color-background-dark);
+	font-weight: bold;
+}
+
+/* Todo keywords */
+.org-viewer__content span.todo-keyword {
+	font-weight: bold;
+	font-size: 0.85em;
+	text-transform: uppercase;
+	margin-inline-end: 0.4em;
+	color: var(--color-text-maxcontrast);
+}
+
+.org-viewer__content span.todo-keyword.TODO,
+.org-viewer__content span.todo-keyword.FIXME {
+	color: var(--color-warning);
+}
+
+.org-viewer__content span.todo-keyword.DONE {
+	color: var(--color-success);
+}
+
+/* Tags */
+.org-viewer__content span.tag {
+	background: var(--color-background-dark);
+	border-radius: var(--border-radius, 3px);
+	padding: 0.1em 0.4em;
+	font-size: 0.85em;
+	margin-inline-start: 0.25em;
+}
+
+/* Priority */
+.org-viewer__content span.priority {
+	font-weight: bold;
+	color: var(--color-text-maxcontrast);
+	margin-inline-end: 0.4em;
+}
+
+/* Footnote definitions */
+.org-viewer__content div.footnote-definition {
+	border-top: 1px solid var(--color-border);
+	padding-top: 0.5em;
+	font-size: 0.875em;
+	color: var(--color-text-maxcontrast);
+}
+
+/* highlight.js theming */
 .org-viewer__content .hljs {
 	background: var(--color-background-dark, #ededed);
 	color: var(--color-main-text, #222);
