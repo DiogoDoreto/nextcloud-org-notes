@@ -44,7 +44,7 @@
           installPhase = ''
             runHook preInstall
             mkdir -p $out
-            cp -r appinfo lib templates js img $out/
+            cp -r appinfo lib templates js css img $out/
             runHook postInstall
           '';
         });

@@ -27,5 +27,6 @@ class Application extends App implements IBootstrap {
     }
 
     public function boot(IBootContext $context): void {
+        \OCP\Util::addStyle(self::APP_ID, 'orgnotes');
     }
 }

@@ -7,13 +7,19 @@ export default defineConfig({
         'process.env.NODE_ENV': '"production"',
     },
     build: {
-        outDir: 'js',
+        outDir: '.',
+        emptyOutDir: false,
         lib: {
             entry: 'src/main.js',
             name: 'orgnotes',
             formats: ['iife'],
-            fileName: () => 'main.js',
+            fileName: () => 'js/main.js',
         },
-        rollupOptions: {},
+        cssFileName: 'main',
+        rollupOptions: {
+            output: {
+                assetFileNames: 'css/[name][extname]',
+            },
+        },
     },
 })
