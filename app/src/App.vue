@@ -69,10 +69,10 @@ export default defineComponent({
 	z-index: 10;
 	background-color: var(--color-main-background);
 	display: flex;
-	align-items: baseline;
+	align-items: center;
 	flex-wrap: wrap;
 	column-gap: 16px;
-	padding: 16px 20px 12px calc(var(--default-clickable-area) + var(--app-navigation-padding, 4px) + 8px);
+	padding: var(--app-navigation-padding, 4px) 20px var(--app-navigation-padding, 4px) calc(var(--default-clickable-area) + var(--app-navigation-padding, 4px) + 8px);
 	border-bottom: 1px solid var(--color-border);
 }
 
