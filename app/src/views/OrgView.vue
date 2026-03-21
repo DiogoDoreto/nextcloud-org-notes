@@ -247,16 +247,21 @@ export default {
 	font-size: 0.85em;
 	text-transform: uppercase;
 	margin-inline-end: 0.4em;
+	padding: 0.1em 0.4em;
+	border-radius: var(--border-radius, 3px);
+	background: var(--color-background-dark);
 	color: var(--color-text-maxcontrast);
 }
 
 .org-viewer__content span.todo-keyword.TODO,
 .org-viewer__content span.todo-keyword.FIXME {
-	color: var(--color-warning);
+	background: var(--color-warning);
+	color: var(--color-warning-text);
 }
 
 .org-viewer__content span.todo-keyword.DONE {
-	color: var(--color-success);
+	background: var(--color-success);
+	color: var(--color-success-text);
 }
 
 /* Tags */
