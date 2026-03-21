@@ -62,7 +62,7 @@ export default defineComponent({
 			debounceTimer = setTimeout(() => {
 				const q = newQuery.toLowerCase()
 				filteredFiles.value = q
-					? newFiles.filter(f => f.name.toLowerCase().includes(q))
+					? newFiles.filter(f => (f.title ?? f.name).toLowerCase().includes(q))
 					: newFiles
 			}, 150)
 		}, { immediate: true })
@@ -70,9 +70,9 @@ export default defineComponent({
 		const sortedFiles = computed(() => {
 			const list = [...filteredFiles.value]
 			if (sortOrder.value === 'name-asc') {
-				list.sort((a, b) => a.name.localeCompare(b.name))
+				list.sort((a, b) => (a.title ?? a.name).localeCompare(b.title ?? b.name))
 			} else if (sortOrder.value === 'name-desc') {
-				list.sort((a, b) => b.name.localeCompare(a.name))
+				list.sort((a, b) => (b.title ?? b.name).localeCompare(a.title ?? a.name))
 			} else if (sortOrder.value === 'mtime-asc') {
 				list.sort((a, b) => a.mtime - b.mtime)
 			} else {

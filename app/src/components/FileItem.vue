@@ -1,5 +1,5 @@
 <template>
-	<NcAppNavigationItem :name="file.name" :active="isActive" @click="open" />
+	<NcAppNavigationItem :name="file.title ?? file.name" :active="isActive" @click="open" />
 </template>
 
 <script>

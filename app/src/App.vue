@@ -7,7 +7,7 @@
 					<h2 class="file-header__name">{{ selectedFileData.name.replace(/\.org$/i, '') }}</h2>
 					<span v-if="formattedMtime" class="file-header__mtime">Last updated {{ formattedMtime }}</span>
 				</header>
-				<OrgView :key="selectedFileData.path" :path="selectedFileData.path" :full-width="true" />
+				<OrgView :key="selectedFileData.path" :path="selectedFileData.path" :full-width="true" :id-map="idMap" />
 			</template>
 			<NcEmptyContent v-else name="Select a file" description="Select a file from the sidebar to view it." />
 		</NcAppContent>
@@ -43,6 +43,8 @@ export default defineComponent({
 			}
 		})
 
+		const idMap = computed(() => Object.fromEntries(files.value.filter(f => f.id).map(f => [f.id, f.path])))
+
 		const selectedFileData = computed(() => {
 			const path = route.query.file
 			return path ? (files.value.find(f => f.path === path) ?? { path, name: path.split('/').pop() }) : null
@@ -55,7 +57,7 @@ export default defineComponent({
 			})
 		})
 
-		return { files, selectedFileData, formattedMtime }
+		return { files, idMap, selectedFileData, formattedMtime }
 	},
 })
 </script>

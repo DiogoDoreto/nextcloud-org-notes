@@ -35,6 +35,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		idMap: {
+			type: Object,
+			default: () => ({}),
+		},
 	},
 
 	data() {
@@ -50,6 +54,7 @@ export default {
 			const url = `/ocs/v2.php/apps/orgnotes/api/v1/file?path=${encodeURIComponent(this.path)}&format=json`
 			const response = await axios.get(url)
 			const content = response.data?.ocs?.data?.content ?? ''
+			const idMap = this.idMap
 			const result = await unified()
 				.use(uniorgParse)
 				.use(uniorgRehype, {
@@ -59,6 +64,18 @@ export default {
 								return this.h(org, 'h1', { className: ['org-title'] }, [String(org.value)])
 							}
 							return null
+						},
+						link: function(org) {
+							if (org.linkType === 'id') {
+								const path = idMap[org.path]
+								const children = org.children.length
+									? this.toHast(org.children, org)
+									: [{ type: 'text', value: org.rawLink }]
+								if (path) {
+									return this.h(org, 'a', { href: `#/?file=${encodeURIComponent(path)}` }, children)
+								}
+								return this.h(org, 'span', {}, children)
+							}
 						},
 					},
 				})

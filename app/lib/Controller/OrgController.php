@@ -28,10 +28,27 @@ class OrgController extends OCSController {
         foreach ($files as $file) {
             $path = $userFolder->getRelativePath($file->getPath());
             if ($path !== null && str_starts_with($path, '/Notes/')) {
+                $handle = $file->fopen('r');
+                if ($handle !== false) {
+                    $header = fread($handle, 2048);
+                    fclose($handle);
+                } else {
+                    $header = substr($file->getContent(), 0, 2048);
+                }
+                $title = null;
+                $id = null;
+                if (preg_match('/^#\+TITLE:\s*(.+)$/mi', $header, $m)) {
+                    $title = trim($m[1]);
+                }
+                if (preg_match('/^:ID:\s*(\S+)/mi', $header, $m)) {
+                    $id = trim($m[1]);
+                }
                 $result[] = [
                     'path' => $path,
                     'name' => $file->getName(),
                     'mtime' => $file->getMTime(),
+                    'title' => $title,
+                    'id' => $id,
                 ];
             }
         }
