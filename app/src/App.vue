@@ -4,7 +4,7 @@
 		<NcAppContent>
 			<template v-if="selectedFileData">
 				<header class="file-header">
-					<h2 class="file-header__name">{{ selectedFileData.name.replace(/\.org$/i, '') }}</h2>
+					<h2 class="file-header__name">{{ selectedFileData.title ?? selectedFileData.name }}</h2>
 					<span v-if="formattedMtime" class="file-header__mtime">Last updated {{ formattedMtime }}</span>
 				</header>
 				<OrgView :key="selectedFileData.path" :path="selectedFileData.path" :full-width="true" :id-map="idMap" />

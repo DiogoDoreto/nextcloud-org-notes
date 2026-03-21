@@ -59,10 +59,7 @@ export default {
 				.use(uniorgParse)
 				.use(uniorgRehype, {
 					handlers: {
-						keyword: function(org) {
-							if (org.key === 'TITLE') {
-								return this.h(org, 'h1', { className: ['org-title'] }, [String(org.value)])
-							}
+						keyword: function() {
 							return null
 						},
 						link: function(org) {
