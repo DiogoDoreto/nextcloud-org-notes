@@ -18,7 +18,13 @@
 			</NcAppNavigationSearch>
 		</template>
 		<template #list>
-			<FileList :files="sortedFiles" />
+			<template v-if="fileGroups">
+				<div v-for="group in fileGroups" :key="group.label" class="file-group">
+					<p class="file-group__header">{{ group.label }}</p>
+					<FileList :files="group.files" />
+				</div>
+			</template>
+			<FileList v-else :files="sortedFiles" />
 		</template>
 	</NcAppNavigation>
 </template>
@@ -81,7 +87,92 @@ export default defineComponent({
 			return list
 		})
 
-		return { filterQuery, sortOrder, sortOptions, sortedFiles }
+		function getBucketBoundaries() {
+			const now = new Date()
+			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+			const startOfYesterday = new Date(startOfToday)
+			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
+			const startOfWeek = new Date(startOfToday)
+			const dayOfWeek = startOfToday.getDay() // 0=Sun
+			const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+			startOfWeek.setDate(startOfWeek.getDate() - daysFromMonday)
+			const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+			return { startOfToday, startOfYesterday, startOfWeek, startOfMonth }
+		}
+
+		function monthLabel(year, monthIndex, currentYear) {
+			const name = new Date(year, monthIndex, 1).toLocaleString('default', { month: 'long' })
+			return year === currentYear ? name : `${name} ${year}`
+		}
+
+		const fileGroups = computed(() => {
+			if (sortOrder.value !== 'mtime-desc' && sortOrder.value !== 'mtime-asc') return null
+
+			const { startOfToday, startOfYesterday, startOfWeek, startOfMonth } = getBucketBoundaries()
+			const todayMs = startOfToday.getTime()
+			const yesterdayMs = startOfYesterday.getTime()
+			const weekMs = startOfWeek.getTime()
+			const monthMs = startOfMonth.getTime()
+			const currentYear = startOfToday.getFullYear()
+
+			const buckets = { today: [], yesterday: [], thisWeek: [], thisMonth: [], monthly: {} }
+
+			for (const file of sortedFiles.value) {
+				const t = file.mtime * 1000
+				if (t >= todayMs) {
+					buckets.today.push(file)
+				} else if (t >= yesterdayMs) {
+					buckets.yesterday.push(file)
+				} else if (t >= weekMs) {
+					buckets.thisWeek.push(file)
+				} else if (t >= monthMs) {
+					buckets.thisMonth.push(file)
+				} else {
+					const d = new Date(t)
+					const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+					if (!buckets.monthly[key]) buckets.monthly[key] = []
+					buckets.monthly[key].push(file)
+				}
+			}
+
+			const isDesc = sortOrder.value === 'mtime-desc'
+			const monthlyKeys = Object.keys(buckets.monthly).sort()
+			if (isDesc) monthlyKeys.reverse()
+			const monthlyGroups = monthlyKeys.map(key => {
+				const [yearStr, monthStr] = key.split('-')
+				return {
+					label: monthLabel(Number(yearStr), Number(monthStr) - 1, currentYear),
+					files: buckets.monthly[key],
+				}
+			})
+
+			const recency = [
+				{ label: 'Today', files: buckets.today },
+				{ label: 'Yesterday', files: buckets.yesterday },
+				{ label: 'This week', files: buckets.thisWeek },
+				{ label: 'This month', files: buckets.thisMonth },
+			]
+
+			const groups = isDesc
+				? [...recency, ...monthlyGroups]
+				: [...monthlyGroups, ...recency.reverse()]
+
+			return groups.filter(g => g.files.length > 0)
+		})
+
+		return { filterQuery, sortOrder, sortOptions, sortedFiles, fileGroups }
 	},
 })
 </script>
+
+<style scoped>
+.file-group__header {
+	color: var(--color-text-maxcontrast);
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	padding: 12px 8px 2px;
+	margin: 0;
+}
+</style>
