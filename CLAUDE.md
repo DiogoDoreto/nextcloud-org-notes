@@ -18,7 +18,7 @@ cd app && pnpm run build   # outputs to app/js/
 nix build                  # outputs appinfo/ lib/ templates/ js/
 ```
 
-Note: after any code changes, ensure that nix build is successful
+Note: after any code changes, ensure that nix build is successful, then commit your changes
 
 ## Writing Vue 3 components
 
