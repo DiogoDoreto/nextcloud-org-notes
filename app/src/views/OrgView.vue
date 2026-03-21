@@ -52,7 +52,16 @@ export default {
 			const content = response.data?.ocs?.data?.content ?? ''
 			const result = await unified()
 				.use(uniorgParse)
-				.use(uniorgRehype)
+				.use(uniorgRehype, {
+					handlers: {
+						keyword: function(org) {
+							if (org.key === 'TITLE') {
+								return this.h(org, 'h1', { className: ['org-title'] }, [String(org.value)])
+							}
+							return null
+						},
+					},
+				})
 				.use(rehypeHighlight)
 				.use(rehypeStringify)
 				.process(content)
@@ -120,6 +129,15 @@ export default {
 .org-viewer__content > :last-child,
 .org-viewer__content blockquote > :last-child {
 	margin-block-end: 0;
+}
+
+/* Document title (#+TITLE:) */
+.org-viewer__content h1.org-title {
+	font-size: 2.2em;
+	font-weight: bold;
+	margin-block-end: 1em;
+	padding-block-end: 0.4em;
+	border-block-end: 1px solid var(--color-border);
 }
 
 /* Headings */
