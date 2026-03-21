@@ -2,11 +2,13 @@
 
 namespace OCA\OrgNotes\AppInfo;
 
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\OrgNotes\Controller\OrgController;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class Application extends App implements IBootstrap {
     public const APP_ID = 'orgnotes';
@@ -28,5 +30,10 @@ class Application extends App implements IBootstrap {
 
     public function boot(IBootContext $context): void {
         \OCP\Util::addStyle(self::APP_ID, 'orgnotes');
+
+        $dispatcher = $context->getServerContainer()->get(IEventDispatcher::class);
+        $dispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
+            \OCP\Util::addScript(self::APP_ID, 'main');
+        });
     }
 }
