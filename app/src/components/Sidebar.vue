@@ -24,8 +24,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch, onMounted } from 'vue'
-import axios from '@nextcloud/axios'
+import { defineComponent, ref, computed, watch } from 'vue'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -37,8 +36,14 @@ export default defineComponent({
 
 	components: { NcAppNavigation, NcAppNavigationSearch, NcActions, NcActionRadio, FileList },
 
-	setup() {
-		const files = ref([])
+	props: {
+		files: {
+			type: Array,
+			required: true,
+		},
+	},
+
+	setup(props) {
 		const filterQuery = ref('')
 		const sortOrder = ref('mtime-desc')
 
@@ -49,20 +54,10 @@ export default defineComponent({
 			{ value: 'name-desc', label: 'Name Z→A' },
 		]
 
-		onMounted(async () => {
-			try {
-				const url = '/ocs/v2.php/apps/orgnotes/api/v1/files?format=json'
-				const response = await axios.get(url)
-				files.value = response.data?.ocs?.data ?? []
-			} catch {
-				files.value = []
-			}
-		})
-
 		let debounceTimer = null
 		const filteredFiles = ref([])
 
-		watch([files, filterQuery], ([newFiles, newQuery]) => {
+		watch([() => props.files, filterQuery], ([newFiles, newQuery]) => {
 			clearTimeout(debounceTimer)
 			debounceTimer = setTimeout(() => {
 				const q = newQuery.toLowerCase()

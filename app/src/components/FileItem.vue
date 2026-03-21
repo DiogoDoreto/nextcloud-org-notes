@@ -25,7 +25,8 @@ export default defineComponent({
 
 		const isActive = computed(() => route.query.file === props.file.path)
 
-		function open() {
+		function open(event) {
+			event?.preventDefault()
 			router.push({ query: { file: props.file.path } })
 		}
 

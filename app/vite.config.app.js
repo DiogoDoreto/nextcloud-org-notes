@@ -5,6 +5,8 @@ export default defineConfig({
     plugins: [vue()],
     define: {
         'process.env.NODE_ENV': '"production"',
+        appName: '"orgnotes"',
+        appVersion: '"0.1.0"',
     },
     build: {
         outDir: '.',
