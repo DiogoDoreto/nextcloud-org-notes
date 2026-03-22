@@ -6,7 +6,7 @@
 				<span v-if="formattedMtime" class="file-header__mtime"
 					>Last updated {{ formattedMtime }}</span
 				>
-				<NcButton variant="tertiary" @click="enterEditMode">Edit</NcButton>
+				<NcButton variant="secondary" @click="enterEditMode">Edit</NcButton>
 			</template>
 			<template v-else>
 				<span v-if="saveError" class="file-header__error">{{
