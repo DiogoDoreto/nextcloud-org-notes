@@ -10,7 +10,7 @@ The app has two surfaces that render org content: the Nextcloud Viewer integrati
 - Null-guard `getUser()` in Application.php
 - Eliminate the duplicated rendering pipeline
 - Consistent Composition API across all Vue components
-- Remove dead/noisy code (empty stubs, name mismatch, bad import order, redundant fopen fallback)
+- Remove dead/noisy code (empty stubs, name mismatch, bad import order)
 
 **Non-Goals:**
 - Adding HTML sanitization via `rehype-sanitize` (uniorg parses org syntax, not raw HTML; a scheme allowlist is the targeted fix)
@@ -35,9 +35,9 @@ Both `OrgView.vue` and `OrgViewHandler.js` call this. The `idMap` option is pass
 
 ### 2. Path validation in OrgController
 
-Add a private helper `requireNotesPath(string $path): bool` and return 403 early from `getFile` and `putFile` if it fails. Mirrors the `str_starts_with($path, '/Notes/')` check already in `listFiles`.
+Call `getUserFolder()->get($path)` first (letting Nextcloud normalise `..` segments), then check `getRelativePath($file->getPath())` against `/Notes/`. Checking the raw input string with `str_starts_with` is insufficient — `/Notes/../private/file` passes that check but resolves outside `/Notes/` after normalisation.
 
-**Alternative considered**: a middleware/annotation approach. Over-engineered for two endpoints.
+**Alternative considered**: `str_starts_with` on the raw `$path` input. Rejected — does not protect against `..` traversal segments.
 
 ### 3. URL scheme allowlist in link handler
 
@@ -61,12 +61,12 @@ return new OrgController(..., $user->getUID());
 
 This preserves the existing approach while making the failure explicit and clear rather than a cryptic TypeError.
 
-### 6. Simplify listFiles header reading
+### 6. listFiles header reading — kept as-is
 
-Replace the `fopen`/`fread`/fallback block with a single `substr($file->getContent(), 0, 2048)`. The `fopen` path was defensive but is unnecessary: `getContent()` is the standard Nextcloud API for reading file contents and is already used in the fallback branch.
+The `fopen`/`fread`/`getContent()` fallback pattern is an intentional optimisation: `fread(handle, 2048)` reads only the bytes needed to extract metadata, while `getContent()` loads the full file into memory. The fallback exists for storage backends (e.g. external storage) that don't support stream access. A comment was added to explain this. No code change was made.
 
 ## Risks / Trade-offs
 
 - **OrgViewHandler.js imports shared module from `src/lib/`**: The handler is built as an IIFE lib (separate Vite config). Both build configs must include `src/lib/renderOrg.js` in their bundle — verify both `vite.config.js` (main.js entry) and `vite.config.app.js` (app.js entry) pick it up via the import graph. Since it's imported by both entry points, Vite will include it automatically.
-- **listFiles simplification**: `getContent()` loads the full file into memory before we take `substr`. For very large org files this is wasteful but acceptable; a future optimisation could use streaming, but that's out of scope.
+- **New `src/lib/` directory must be git-tracked**: Nix flakes only include files tracked by git. `src/lib/renderOrg.js` required `git add` before `nix build` would succeed.
 - **Scheme allowlist may be too restrictive**: Custom org link types (e.g., `org-protocol:`) won't render as links. This is the conservative choice; the allowlist can be expanded per user request.
