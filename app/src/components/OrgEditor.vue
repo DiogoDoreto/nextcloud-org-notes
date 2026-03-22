@@ -46,6 +46,7 @@ const nextcloudTheme = EditorView.theme({
 		fontFamily: 'monospace',
 		padding: '8px 0',
 		border: 'none !important',
+		backgroundColor: 'transparent !important',
 	},
 	'.cm-cursor, .cm-dropCursor': {
 		borderLeftColor: 'var(--color-main-text)',
@@ -71,7 +72,7 @@ const nextcloudTheme = EditorView.theme({
 		color: 'var(--color-main-text)',
 	},
 	'.cm-activeLine': {
-		backgroundColor: 'var(--color-background-hover)',
+		backgroundColor: 'color-mix(in srgb, var(--color-main-text) 6%, transparent)',
 	},
 	'.cm-matchingBracket': {
 		backgroundColor: 'var(--color-background-dark)',
