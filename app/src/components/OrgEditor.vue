@@ -28,7 +28,68 @@ import { defineComponent, ref } from 'vue'
 import { Codemirror } from 'vue-codemirror'
 import { basicSetup } from 'codemirror'
 import { EditorSelection } from '@codemirror/state'
+import { EditorView } from '@codemirror/view'
 import NcButton from '@nextcloud/vue/components/NcButton'
+
+const nextcloudTheme = EditorView.theme({
+	'&': {
+		color: 'var(--color-main-text)',
+		backgroundColor: 'var(--color-main-background)',
+		height: '100%',
+	},
+	'&.cm-focused': {
+		outline: '2px solid var(--color-primary-element)',
+		outlineOffset: '-2px',
+	},
+	'.cm-content': {
+		caretColor: 'var(--color-main-text)',
+		fontFamily: 'monospace',
+		padding: '8px 0',
+	},
+	'.cm-cursor, .cm-dropCursor': {
+		borderLeftColor: 'var(--color-main-text)',
+	},
+	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection': {
+		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 25%, transparent)',
+	},
+	'.cm-gutters': {
+		backgroundColor: 'var(--color-background-dark)',
+		color: 'var(--color-text-maxcontrast)',
+		border: 'none',
+		borderRight: '1px solid var(--color-border)',
+	},
+	'.cm-lineNumbers .cm-gutterElement': {
+		color: 'var(--color-text-maxcontrast)',
+	},
+	'.cm-activeLineGutter': {
+		backgroundColor: 'var(--color-background-hover)',
+		color: 'var(--color-main-text)',
+	},
+	'.cm-activeLine': {
+		backgroundColor: 'var(--color-background-hover)',
+	},
+	'.cm-matchingBracket': {
+		backgroundColor: 'var(--color-background-dark)',
+		outline: '1px solid var(--color-border-dark)',
+	},
+	'.cm-tooltip': {
+		backgroundColor: 'var(--color-main-background)',
+		border: '1px solid var(--color-border)',
+		borderRadius: 'var(--border-radius, 3px)',
+		color: 'var(--color-main-text)',
+	},
+	'.cm-panels': {
+		backgroundColor: 'var(--color-background-dark)',
+		color: 'var(--color-main-text)',
+	},
+	'.cm-searchMatch': {
+		backgroundColor: 'color-mix(in srgb, var(--color-warning) 30%, transparent)',
+		outline: '1px solid var(--color-warning)',
+	},
+	'.cm-searchMatch.cm-searchMatch-selected': {
+		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 40%, transparent)',
+	},
+})
 
 function wrapSelection(delim) {
 	return (view) => {
@@ -61,7 +122,7 @@ export default defineComponent({
 
 	setup() {
 		const editorView = ref(null)
-		const extensions = [basicSetup]
+		const extensions = [basicSetup, nextcloudTheme]
 
 		function onReady({ view }) {
 			editorView.value = view
@@ -97,16 +158,11 @@ export default defineComponent({
 .org-editor__cm {
 	flex: 1;
 	overflow: auto;
-	font-family: monospace;
 	font-size: 0.95em;
 }
 </style>
 
 <style>
-.org-editor__cm .cm-editor {
-	height: 100%;
-}
-
 .org-editor__cm .cm-scroller {
 	font-family: monospace;
 }
