@@ -22,4 +22,4 @@
 
 ## 5. Commit
 
-- [ ] 5.1 Commit all changes (config files, package.json, lock file, source fixes)
+- [x] 5.1 Commit all changes (config files, package.json, lock file, source fixes)
