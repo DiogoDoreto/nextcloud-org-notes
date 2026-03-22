@@ -12,6 +12,10 @@
     <dependencies>
         <nextcloud min-version="31" max-version="33"/>
     </dependencies>
+    <settings>
+        <personal>OCA\OrgNotes\Settings\PersonalSettings</personal>
+        <personal-section>OCA\OrgNotes\Settings\PersonalSection</personal-section>
+    </settings>
     <navigations>
         <navigation>
             <name>Org Notes</name>

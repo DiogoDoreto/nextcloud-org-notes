@@ -4,8 +4,6 @@ namespace OCA\OrgNotes\AppInfo;
 
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
 use OCA\OrgNotes\Controller\OrgController;
-use OCA\OrgNotes\Settings\PersonalSection;
-use OCA\OrgNotes\Settings\PersonalSettings;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -33,8 +31,6 @@ class Application extends App implements IBootstrap {
                 $user->getUID(),
             );
         });
-        $context->registerPersonalSettings(PersonalSettings::class);
-        $context->registerPersonalSection(PersonalSection::class);
     }
 
     public function boot(IBootContext $context): void {
