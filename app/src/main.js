@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	const textIdx = handlers.findIndex(h => h.id === 'text')
 	if (textIdx >= 0) {
 		handlers.splice(textIdx, 0, handler)
+		// Remove text/org from the text handler's mimes so it doesn't also
+		// attempt to register it after us, which would log a "mime already
+		// registered" error.
+		const textHandler = handlers[textIdx + 1]
+		if (textHandler?.mimes) {
+			textHandler.mimes = textHandler.mimes.filter(m => m !== 'text/org')
+		}
 	} else {
 		handlers.push(handler)
 	}
