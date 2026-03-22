@@ -7,6 +7,7 @@ use OCP\AppFramework\OCSController;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\IRequest;
+use OCP\Files\NotPermittedException;
 
 class OrgController extends OCSController {
     public function __construct(
@@ -66,6 +67,25 @@ class OrgController extends OCSController {
             return new DataResponse(['content' => $content]);
         } catch (NotFoundException) {
             return new DataResponse([], 404);
+        }
+    }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function putFile(string $path, string $content): DataResponse {
+        try {
+            $userFolder = $this->rootFolder->getUserFolder($this->userId);
+            $file = $userFolder->get($path);
+            if (!$file->isUpdateable()) {
+                return new DataResponse([], 403);
+            }
+            $file->putContent($content);
+            return new DataResponse([]);
+        } catch (NotFoundException) {
+            return new DataResponse([], 404);
+        } catch (NotPermittedException) {
+            return new DataResponse([], 403);
         }
     }
 }

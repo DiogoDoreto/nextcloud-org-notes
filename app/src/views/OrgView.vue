@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
 import { unified } from 'unified'
 import uniorgParse from 'uniorg-parse'
 import uniorgRehype from 'uniorg-rehype'
@@ -23,13 +22,9 @@ export default {
 	name: 'OrgView',
 
 	props: {
-		path: {
+		content: {
 			type: String,
 			required: true,
-		},
-		mime: {
-			type: String,
-			default: 'text/org',
 		},
 		fullWidth: {
 			type: Boolean,
@@ -49,42 +44,47 @@ export default {
 		}
 	},
 
-	async mounted() {
-		try {
-			const url = `/ocs/v2.php/apps/orgnotes/api/v1/file?path=${encodeURIComponent(this.path)}&format=json`
-			const response = await axios.get(url)
-			const content = response.data?.ocs?.data?.content ?? ''
-			const idMap = this.idMap
-			const result = await unified()
-				.use(uniorgParse)
-				.use(uniorgRehype, {
-					handlers: {
-						keyword: function() {
-							return null
-						},
-						link: function(org) {
-							if (org.linkType === 'id') {
-								const path = idMap[org.path]
-								const children = org.children.length
-									? this.toHast(org.children, org)
-									: [{ type: 'text', value: org.rawLink }]
-								if (path) {
-									return this.h(org, 'a', { href: `#/?file=${encodeURIComponent(path)}` }, children)
+	watch: {
+		content: { immediate: true, handler: 'renderContent' },
+	},
+
+	methods: {
+		async renderContent() {
+			this.loading = true
+			this.error = null
+			try {
+				const idMap = this.idMap
+				const result = await unified()
+					.use(uniorgParse)
+					.use(uniorgRehype, {
+						handlers: {
+							keyword: function() {
+								return null
+							},
+							link: function(org) {
+								if (org.linkType === 'id') {
+									const path = idMap[org.path]
+									const children = org.children.length
+										? this.toHast(org.children, org)
+										: [{ type: 'text', value: org.rawLink }]
+									if (path) {
+										return this.h(org, 'a', { href: `#/?file=${encodeURIComponent(path)}` }, children)
+									}
+									return this.h(org, 'span', {}, children)
 								}
-								return this.h(org, 'span', {}, children)
-							}
+							},
 						},
-					},
-				})
-				.use(rehypeHighlight)
-				.use(rehypeStringify)
-				.process(content)
-			this.html = String(result)
-		} catch (err) {
-			this.error = err?.message ?? 'Failed to load file'
-		} finally {
-			this.loading = false
-		}
+					})
+					.use(rehypeHighlight)
+					.use(rehypeStringify)
+					.process(this.content)
+				this.html = String(result)
+			} catch (err) {
+				this.error = err?.message ?? 'Failed to render file'
+			} finally {
+				this.loading = false
+			}
+		},
 	},
 }
 </script>
