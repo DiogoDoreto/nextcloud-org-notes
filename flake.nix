@@ -42,6 +42,7 @@
                   "pnpm-lock.yaml"
                   "vite.config.js"
                   "vite.config.app.js"
+                  "vite.config.personal-settings.js"
                   "eslint.config.js"
                 ];
                 inAppDir = builtins.any (
