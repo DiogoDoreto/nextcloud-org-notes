@@ -1,31 +1,32 @@
 <template>
-	<div class="orgnotes-settings">
-		<h2>Org Notes</h2>
-		<p class="orgnotes-settings__description">
-			Directory for org files (relative to your Nextcloud root)
-		</p>
-		<NcTextField
-			v-model="directory"
-			label="Notes directory"
-			:error="!!errorMessage"
-			:helperText="errorMessage || successMessage"
-			:success="!!successMessage" />
-		<NcButton :disabled="saving" variant="primary" @click="save">
-			Save
-		</NcButton>
-	</div>
+	<NcSettingsSection
+		name="Org Notes"
+		description="Directory for org files (relative to your Nextcloud root)">
+		<div class="orgnotes-settings">
+			<NcTextField
+				v-model="directory"
+				label="Notes directory"
+				:error="!!errorMessage"
+				:helperText="errorMessage || successMessage"
+				:success="!!successMessage" />
+			<NcButton :disabled="saving" variant="primary" @click="save">
+				Save
+			</NcButton>
+		</div>
+	</NcSettingsSection>
 </template>
 
 <script>
 import { defineComponent, onMounted, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import { getSettings, saveSettings } from '../lib/api.js'
 
 export default defineComponent({
 	name: 'PersonalSettings',
 
-	components: { NcButton, NcTextField },
+	components: { NcButton, NcSettingsSection, NcTextField },
 
 	setup() {
 		const directory = ref('Notes')
@@ -79,9 +80,5 @@ export default defineComponent({
 	flex-direction: column;
 	gap: 12px;
 	max-width: 400px;
-}
-
-.orgnotes-settings__description {
-	color: var(--color-text-maxcontrast);
 }
 </style>
