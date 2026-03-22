@@ -17,7 +17,7 @@ export default defineConfig({
         },
         rollupOptions: {
             output: {
-                assetFileNames: 'css/[name][extname]',
+                assetFileNames: 'css/personal-settings[extname]',
             },
         },
     },
