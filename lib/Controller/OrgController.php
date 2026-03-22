@@ -64,12 +64,15 @@ class OrgController extends OCSController {
      * @NoAdminRequired
      */
     public function getFile(string $path): DataResponse {
-        if (!str_starts_with($path, '/Notes/')) {
-            return new DataResponse([], 403);
-        }
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
+            // Check the normalised path after resolution to prevent traversal
+            // via segments like '/Notes/../private/file'.
+            $normalizedPath = $userFolder->getRelativePath($file->getPath());
+            if ($normalizedPath === null || !str_starts_with($normalizedPath, '/Notes/')) {
+                return new DataResponse([], 403);
+            }
             $content = $file->getContent();
             return new DataResponse(['content' => $content]);
         } catch (NotFoundException) {
@@ -81,12 +84,15 @@ class OrgController extends OCSController {
      * @NoAdminRequired
      */
     public function putFile(string $path, string $content): DataResponse {
-        if (!str_starts_with($path, '/Notes/')) {
-            return new DataResponse([], 403);
-        }
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
+            // Check the normalised path after resolution to prevent traversal
+            // via segments like '/Notes/../private/file'.
+            $normalizedPath = $userFolder->getRelativePath($file->getPath());
+            if ($normalizedPath === null || !str_starts_with($normalizedPath, '/Notes/')) {
+                return new DataResponse([], 403);
+            }
             if (!$file->isUpdateable()) {
                 return new DataResponse([], 403);
             }
