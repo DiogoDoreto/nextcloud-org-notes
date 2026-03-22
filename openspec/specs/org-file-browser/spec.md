@@ -24,8 +24,8 @@ The `GET /apps/orgnotes/` route SHALL render an HTML template that includes a `<
 - **WHEN** a user navigates to `/apps/orgnotes/`
 - **THEN** the page renders with a sidebar and an empty main content area (no file selected)
 
-### Requirement: Sidebar lists .org files under Notes/
-The sidebar SHALL display all `.org` files found recursively under the `Notes/` folder in the authenticated user's storage. Each item SHALL show the file's title if one is available, falling back to the filename when `title` is null. The list SHALL be fetched from the files API on page load.
+### Requirement: Sidebar lists .org files under configured directory
+The sidebar SHALL display all `.org` files found recursively under the user's configured org files root directory in the authenticated user's storage. Each item SHALL show the file's title if one is available, falling back to the filename when `title` is null. The list SHALL be fetched from the files API on page load.
 
 #### Scenario: Files with titles show title in sidebar
 - **WHEN** the browser page loads and a file has a non-null `title`
@@ -36,7 +36,7 @@ The sidebar SHALL display all `.org` files found recursively under the `Notes/` 
 - **THEN** the sidebar item displays the filename as before
 
 #### Scenario: Empty state when no files found
-- **WHEN** the user has no `.org` files under `Notes/` (or the folder does not exist)
+- **WHEN** the user has no `.org` files under their configured directory (or the folder does not exist)
 - **THEN** the sidebar shows an empty state message rather than an error
 
 ### Requirement: Sidebar filter by title or filename
@@ -94,3 +94,14 @@ The selected file SHALL be encoded in the URL as `#/?file=<path>`. On page load,
 #### Scenario: Browser back navigates to previous file
 - **WHEN** the user has navigated through multiple files and presses the browser back button
 - **THEN** the previously viewed file is selected and rendered
+
+### Requirement: Sidebar has a settings button at the bottom
+The sidebar SHALL display a settings icon button fixed at the bottom of the sidebar panel. The button SHALL follow the standard Nextcloud app convention for accessing personal settings. Clicking it SHALL navigate the user to the orgnotes section of the Nextcloud personal settings page.
+
+#### Scenario: Settings button is visible in the sidebar
+- **WHEN** the user opens the org file browser
+- **THEN** a settings icon button is visible at the bottom of the sidebar
+
+#### Scenario: Settings button navigates to personal settings
+- **WHEN** the user clicks the settings button
+- **THEN** the browser navigates to the orgnotes section of the Nextcloud personal settings page
