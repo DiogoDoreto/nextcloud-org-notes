@@ -29,6 +29,10 @@ class OrgController extends OCSController {
         foreach ($files as $file) {
             $path = $userFolder->getRelativePath($file->getPath());
             if ($path !== null && str_starts_with($path, '/Notes/')) {
+                // Read only the first 2 KB to extract metadata keywords.
+                // fopen/fread avoids loading the full file into memory;
+                // getContent() is the fallback for storage backends (e.g.
+                // external storage) that do not support stream access.
                 $handle = $file->fopen('r');
                 if ($handle !== false) {
                     $header = fread($handle, 2048);
