@@ -1,8 +1,31 @@
-import { registerHandler } from '@nextcloud/viewer'
 import OrgView from './views/OrgView.vue'
 
-registerHandler({
+const handler = {
 	id: 'org-mode',
-	mimes: ['text/x-org'],
+	mimes: ['text/org'],
 	component: OrgView,
-})
+}
+
+// Queue via the standard mechanism (fallback).
+window._oca_viewer_handlers ??= new Map()
+window._oca_viewer_handlers.set(handler.id, handler)
+
+// Also insert directly into _state.handlers before the Text app handler,
+// which explicitly claims text/org. All other handlers register synchronously
+// during script execution (before DOMContentLoaded). Our init script adds this
+// listener first, so it fires before Viewer.vue's DOMContentLoaded callback
+// processes the handlers array. By splicing in before 'text', we win the
+// first-registered race for text/org.
+document.addEventListener('DOMContentLoaded', () => {
+	const viewer = window.OCA?.Viewer
+	if (!viewer?._state?.handlers) return
+	if (viewer._state.handlers.find(h => h.id === handler.id)) return
+
+	const handlers = viewer._state.handlers
+	const textIdx = handlers.findIndex(h => h.id === 'text')
+	if (textIdx >= 0) {
+		handlers.splice(textIdx, 0, handler)
+	} else {
+		handlers.push(handler)
+	}
+}, { once: true })
