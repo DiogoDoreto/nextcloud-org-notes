@@ -36,6 +36,29 @@ The implementation SHALL use `IRootFolder::getUserFolder()->search()` with a MIM
 - **WHEN** the endpoint is called
 - **THEN** only files with MIME type `text/org` are considered, regardless of extension
 
+### Requirement: File endpoints restrict access to Notes/ directory
+The `getFile` and `putFile` OCS endpoints SHALL reject any request whose path does not resolve to within `/Notes/`. The check SHALL be performed on the normalised path returned by `getRelativePath()` after Nextcloud resolves the input — not on the raw input string — to prevent traversal via segments like `..`. A rejected request SHALL return HTTP 403 with an empty data payload. This matches the restriction already enforced by the `listFiles` endpoint.
+
+#### Scenario: getFile rejects path outside Notes/
+- **WHEN** a GET request is made to the file endpoint with `path=/private.txt`
+- **THEN** the response is HTTP 403 and no file content is returned
+
+#### Scenario: getFile rejects traversal path
+- **WHEN** a GET request is made to the file endpoint with `path=/Notes/../private.txt`
+- **THEN** the response is HTTP 403 and no file content is returned
+
+#### Scenario: putFile rejects path outside Notes/
+- **WHEN** a PUT request is made to the file endpoint with `path=/private.txt` and a content body
+- **THEN** the response is HTTP 403 and the file is not modified
+
+#### Scenario: getFile accepts path inside Notes/
+- **WHEN** a GET request is made to the file endpoint with `path=/Notes/example.org`
+- **THEN** the response returns the file content normally
+
+#### Scenario: putFile accepts path inside Notes/
+- **WHEN** a PUT request is made to the file endpoint with `path=/Notes/example.org` and valid content
+- **THEN** the file is updated and the response is HTTP 200
+
 ### Requirement: Response format
 The endpoint SHALL return an OCS-formatted JSON response consistent with existing endpoints:
 ```json
