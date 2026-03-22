@@ -1,34 +1,50 @@
 <template>
 	<div class="org-editor">
 		<div class="org-editor__toolbar">
-			<NcButton type="tertiary" :aria-label="'Bold'" title="Bold (*)" @click="applyFormat('*')">
+			<NcButton
+				variant="tertiary"
+				aria-label="Bold"
+				title="Bold (*)"
+				@click="applyFormat('*')">
 				<template #icon><strong>B</strong></template>
 			</NcButton>
-			<NcButton type="tertiary" :aria-label="'Italic'" title="Italic (/)" @click="applyFormat('/')">
-				<template #icon><span style="font-style: italic;">I</span></template>
+			<NcButton
+				variant="tertiary"
+				aria-label="Italic"
+				title="Italic (/)"
+				@click="applyFormat('/')">
+				<template #icon><span style="font-style: italic">I</span></template>
 			</NcButton>
-			<NcButton type="tertiary" :aria-label="'Verbatim'" title="Verbatim (=)" @click="applyFormat('=')">
+			<NcButton
+				variant="tertiary"
+				aria-label="Verbatim"
+				title="Verbatim (=)"
+				@click="applyFormat('=')">
 				<template #icon><code>=</code></template>
 			</NcButton>
-			<NcButton type="tertiary" :aria-label="'Code'" title="Code (~)" @click="applyFormat('~')">
+			<NcButton
+				variant="tertiary"
+				aria-label="Code"
+				title="Code (~)"
+				@click="applyFormat('~')">
 				<template #icon><code>~</code></template>
 			</NcButton>
 		</div>
 		<Codemirror
-			:model-value="modelValue"
+			:modelValue="modelValue"
 			:extensions="extensions"
 			class="org-editor__cm"
 			@ready="onReady"
-			@update:model-value="$emit('update:modelValue', $event)" />
+			@update:modelValue="$emit('update:modelValue', $event)" />
 	</div>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import { Codemirror } from 'vue-codemirror'
-import { basicSetup } from 'codemirror'
 import { EditorSelection } from '@codemirror/state'
 import { EditorView } from '@codemirror/view'
+import { basicSetup } from 'codemirror'
+import { defineComponent, ref } from 'vue'
+import { Codemirror } from 'vue-codemirror'
 import NcButton from '@nextcloud/vue/components/NcButton'
 
 const nextcloudTheme = EditorView.theme({
@@ -50,11 +66,14 @@ const nextcloudTheme = EditorView.theme({
 	'.cm-cursor, .cm-dropCursor': {
 		borderLeftColor: 'var(--color-main-text)',
 	},
-	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground': {
-		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
-	},
+	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground':
+		{
+			backgroundColor:
+				'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
+		},
 	'::selection': {
-		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
+		backgroundColor:
+			'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
 		color: 'var(--color-main-text)',
 	},
 	'.cm-gutters': {
@@ -71,7 +90,8 @@ const nextcloudTheme = EditorView.theme({
 		color: 'var(--color-main-text)',
 	},
 	'.cm-activeLine': {
-		backgroundColor: 'color-mix(in srgb, var(--color-main-text) 6%, transparent)',
+		backgroundColor:
+			'color-mix(in srgb, var(--color-main-text) 6%, transparent)',
 	},
 	'.cm-matchingBracket': {
 		backgroundColor: 'var(--color-background-dark)',
@@ -92,10 +112,15 @@ const nextcloudTheme = EditorView.theme({
 		outline: '1px solid var(--color-warning)',
 	},
 	'.cm-searchMatch.cm-searchMatch-selected': {
-		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 40%, transparent)',
+		backgroundColor:
+			'color-mix(in srgb, var(--color-primary-element) 40%, transparent)',
 	},
 })
 
+/**
+ *
+ * @param delim
+ */
 function wrapSelection(delim) {
 	return (view) => {
 		const changes = view.state.changeByRange((range) => {
@@ -129,10 +154,19 @@ export default defineComponent({
 		const editorView = ref(null)
 		const extensions = [basicSetup, nextcloudTheme]
 
+		/**
+		 *
+		 * @param root0
+		 * @param root0.view
+		 */
 		function onReady({ view }) {
 			editorView.value = view
 		}
 
+		/**
+		 *
+		 * @param delim
+		 */
 		function applyFormat(delim) {
 			if (!editorView.value) return
 			wrapSelection(delim)(editorView.value)

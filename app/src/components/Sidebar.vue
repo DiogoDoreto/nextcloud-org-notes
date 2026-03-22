@@ -9,8 +9,7 @@
 							:key="option.value"
 							v-model="sortOrder"
 							:value="option.value"
-							name="sort-order"
-						>
+							name="sort-order">
 							{{ option.label }}
 						</NcActionRadio>
 					</NcActions>
@@ -19,7 +18,10 @@
 		</template>
 		<template #list>
 			<template v-if="fileGroups">
-				<div v-for="group in fileGroups" :key="group.label" class="file-group">
+				<div
+					v-for="group in fileGroups"
+					:key="group.label"
+					class="file-group">
 					<p class="file-group__header">{{ group.label }}</p>
 					<FileList :files="group.files" />
 				</div>
@@ -30,17 +32,23 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, watch } from 'vue'
+import { computed, defineComponent, ref, watch } from 'vue'
+import NcActionRadio from '@nextcloud/vue/components/NcActionRadio'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
-import NcActions from '@nextcloud/vue/components/NcActions'
-import NcActionRadio from '@nextcloud/vue/components/NcActionRadio'
 import FileList from './FileList.vue'
 
 export default defineComponent({
 	name: 'OrgSidebar',
 
-	components: { NcAppNavigation, NcAppNavigationSearch, NcActions, NcActionRadio, FileList },
+	components: {
+		NcAppNavigation,
+		NcAppNavigationSearch,
+		NcActions,
+		NcActionRadio,
+		FileList,
+	},
 
 	props: {
 		files: {
@@ -63,22 +71,32 @@ export default defineComponent({
 		let debounceTimer = null
 		const filteredFiles = ref([])
 
-		watch([() => props.files, filterQuery], ([newFiles, newQuery]) => {
-			clearTimeout(debounceTimer)
-			debounceTimer = setTimeout(() => {
-				const q = newQuery.toLowerCase()
-				filteredFiles.value = q
-					? newFiles.filter(f => (f.title ?? f.name).toLowerCase().includes(q))
-					: newFiles
-			}, 150)
-		}, { immediate: true })
+		watch(
+			[() => props.files, filterQuery],
+			([newFiles, newQuery]) => {
+				clearTimeout(debounceTimer)
+				debounceTimer = setTimeout(() => {
+					const q = newQuery.toLowerCase()
+					filteredFiles.value = q
+						? newFiles.filter((f) =>
+								(f.title ?? f.name).toLowerCase().includes(q),
+							)
+						: newFiles
+				}, 150)
+			},
+			{ immediate: true },
+		)
 
 		const sortedFiles = computed(() => {
 			const list = [...filteredFiles.value]
 			if (sortOrder.value === 'name-asc') {
-				list.sort((a, b) => (a.title ?? a.name).localeCompare(b.title ?? b.name))
+				list.sort((a, b) =>
+					(a.title ?? a.name).localeCompare(b.title ?? b.name),
+				)
 			} else if (sortOrder.value === 'name-desc') {
-				list.sort((a, b) => (b.title ?? b.name).localeCompare(a.title ?? a.name))
+				list.sort((a, b) =>
+					(b.title ?? b.name).localeCompare(a.title ?? a.name),
+				)
 			} else if (sortOrder.value === 'mtime-asc') {
 				list.sort((a, b) => a.mtime - b.mtime)
 			} else {
@@ -87,9 +105,16 @@ export default defineComponent({
 			return list
 		})
 
+		/**
+		 *
+		 */
 		function getBucketBoundaries() {
 			const now = new Date()
-			const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+			const startOfToday = new Date(
+				now.getFullYear(),
+				now.getMonth(),
+				now.getDate(),
+			)
 			const startOfYesterday = new Date(startOfToday)
 			startOfYesterday.setDate(startOfYesterday.getDate() - 1)
 			const startOfWeek = new Date(startOfToday)
@@ -100,22 +125,38 @@ export default defineComponent({
 			return { startOfToday, startOfYesterday, startOfWeek, startOfMonth }
 		}
 
+		/**
+		 *
+		 * @param year
+		 * @param monthIndex
+		 * @param currentYear
+		 */
 		function monthLabel(year, monthIndex, currentYear) {
-			const name = new Date(year, monthIndex, 1).toLocaleString('default', { month: 'long' })
+			const name = new Date(year, monthIndex, 1).toLocaleString('default', {
+				month: 'long',
+			})
 			return year === currentYear ? name : `${name} ${year}`
 		}
 
 		const fileGroups = computed(() => {
-			if (sortOrder.value !== 'mtime-desc' && sortOrder.value !== 'mtime-asc') return null
+			if (sortOrder.value !== 'mtime-desc' && sortOrder.value !== 'mtime-asc')
+				return null
 
-			const { startOfToday, startOfYesterday, startOfWeek, startOfMonth } = getBucketBoundaries()
+			const { startOfToday, startOfYesterday, startOfWeek, startOfMonth } =
+				getBucketBoundaries()
 			const todayMs = startOfToday.getTime()
 			const yesterdayMs = startOfYesterday.getTime()
 			const weekMs = startOfWeek.getTime()
 			const monthMs = startOfMonth.getTime()
 			const currentYear = startOfToday.getFullYear()
 
-			const buckets = { today: [], yesterday: [], thisWeek: [], thisMonth: [], monthly: {} }
+			const buckets = {
+				today: [],
+				yesterday: [],
+				thisWeek: [],
+				thisMonth: [],
+				monthly: {},
+			}
 
 			for (const file of sortedFiles.value) {
 				const t = file.mtime * 1000
@@ -138,10 +179,14 @@ export default defineComponent({
 			const isDesc = sortOrder.value === 'mtime-desc'
 			const monthlyKeys = Object.keys(buckets.monthly).sort()
 			if (isDesc) monthlyKeys.reverse()
-			const monthlyGroups = monthlyKeys.map(key => {
+			const monthlyGroups = monthlyKeys.map((key) => {
 				const [yearStr, monthStr] = key.split('-')
 				return {
-					label: monthLabel(Number(yearStr), Number(monthStr) - 1, currentYear),
+					label: monthLabel(
+						Number(yearStr),
+						Number(monthStr) - 1,
+						currentYear,
+					),
 					files: buckets.monthly[key],
 				}
 			})
@@ -157,7 +202,7 @@ export default defineComponent({
 				? [...recency, ...monthlyGroups]
 				: [...monthlyGroups, ...recency.reverse()]
 
-			return groups.filter(g => g.files.length > 0)
+			return groups.filter((g) => g.files.length > 0)
 		})
 
 		return { filterQuery, sortOrder, sortOptions, sortedFiles, fileGroups }

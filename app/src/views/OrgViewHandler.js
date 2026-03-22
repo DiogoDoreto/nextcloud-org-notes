@@ -1,16 +1,17 @@
-import orgViewerStyles from './OrgViewHandler.css?inline'
 import axios from '@nextcloud/axios'
+
+import orgViewerStyles from './OrgViewHandler.css?inline'
 
 // Inject styles once. Vite IIFE lib mode drops CSS files; inline import embeds
 // the CSS as a string so we can inject it ourselves.
 const styleEl = document.createElement('style')
 styleEl.textContent = orgViewerStyles
 document.head.appendChild(styleEl)
+import rehypeHighlight from 'rehype-highlight'
+import rehypeStringify from 'rehype-stringify'
 import { unified } from 'unified'
 import uniorgParse from 'uniorg-parse'
 import uniorgRehype from 'uniorg-rehype'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeStringify from 'rehype-stringify'
 
 // Vue 2.7-compatible viewer handler component (no template compilation).
 // The Nextcloud Viewer uses Vue 2.7 and calls render(h) with h as first arg.
@@ -46,13 +47,15 @@ export default {
 			const url = `/ocs/v2.php/apps/orgnotes/api/v1/file?path=${encodeURIComponent(path)}&format=json`
 			const response = await axios.get(url)
 			const content = response.data?.ocs?.data?.content ?? ''
-			const titleMatch = content.match(/^#\+TITLE:\s*(.+)$/mi)
+			const titleMatch = content.match(/^#\+TITLE:\s*(.+)$/im)
 			this.title = titleMatch ? titleMatch[1].trim() : null
 			const result = await unified()
 				.use(uniorgParse)
 				.use(uniorgRehype, {
 					handlers: {
-						keyword() { return null },
+						keyword() {
+							return null
+						},
 					},
 				})
 				.use(rehypeHighlight)
@@ -91,10 +94,12 @@ export default {
 		if (this.title) {
 			inner.push(h('h2', { class: ['org-viewer__title'] }, [this.title]))
 		}
-		inner.push(h('div', {
-			class: ['org-viewer__content'],
-			domProps: { innerHTML: this.html },
-		}))
+		inner.push(
+			h('div', {
+				class: ['org-viewer__content'],
+				domProps: { innerHTML: this.html },
+			}),
+		)
 
 		return h('div', { class: classes }, [
 			h('div', { class: ['org-viewer__inner'] }, inner),

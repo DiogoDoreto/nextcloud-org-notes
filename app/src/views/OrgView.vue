@@ -12,11 +12,11 @@
 </template>
 
 <script>
+import rehypeHighlight from 'rehype-highlight'
+import rehypeStringify from 'rehype-stringify'
 import { unified } from 'unified'
 import uniorgParse from 'uniorg-parse'
 import uniorgRehype from 'uniorg-rehype'
-import rehypeHighlight from 'rehype-highlight'
-import rehypeStringify from 'rehype-stringify'
 
 export default {
 	name: 'OrgView',
@@ -26,10 +26,12 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		fullWidth: {
 			type: Boolean,
 			default: false,
 		},
+
 		idMap: {
 			type: Object,
 			default: () => ({}),
@@ -58,17 +60,24 @@ export default {
 					.use(uniorgParse)
 					.use(uniorgRehype, {
 						handlers: {
-							keyword: function() {
+							keyword: function () {
 								return null
 							},
-							link: function(org) {
+							link: function (org) {
 								if (org.linkType === 'id') {
 									const path = idMap[org.path]
 									const children = org.children.length
 										? this.toHast(org.children, org)
 										: [{ type: 'text', value: org.rawLink }]
 									if (path) {
-										return this.h(org, 'a', { href: `#/?file=${encodeURIComponent(path)}` }, children)
+										return this.h(
+											org,
+											'a',
+											{
+												href: `#/?file=${encodeURIComponent(path)}`,
+											},
+											children,
+										)
 									}
 									return this.h(org, 'span', {}, children)
 								}
@@ -165,12 +174,24 @@ export default {
 	margin-block-end: 0.5em;
 }
 
-.org-viewer__content h1 { font-size: 2em; }
-.org-viewer__content h2 { font-size: 1.5em; }
-.org-viewer__content h3 { font-size: 1.25em; }
-.org-viewer__content h4 { font-size: 1.1em; }
-.org-viewer__content h5 { font-size: 1em; }
-.org-viewer__content h6 { font-size: 0.9em; }
+.org-viewer__content h1 {
+	font-size: 2em;
+}
+.org-viewer__content h2 {
+	font-size: 1.5em;
+}
+.org-viewer__content h3 {
+	font-size: 1.25em;
+}
+.org-viewer__content h4 {
+	font-size: 1.1em;
+}
+.org-viewer__content h5 {
+	font-size: 1em;
+}
+.org-viewer__content h6 {
+	font-size: 0.9em;
+}
 
 /* Lists */
 .org-viewer__content ul {

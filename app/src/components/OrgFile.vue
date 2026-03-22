@@ -3,27 +3,39 @@
 		<header class="file-header">
 			<h2 class="file-header__name">{{ title ?? path.split('/').pop() }}</h2>
 			<template v-if="!editMode">
-				<span v-if="formattedMtime" class="file-header__mtime">Last updated {{ formattedMtime }}</span>
-				<NcButton type="tertiary" @click="enterEditMode">Edit</NcButton>
+				<span v-if="formattedMtime" class="file-header__mtime"
+					>Last updated {{ formattedMtime }}</span
+				>
+				<NcButton variant="tertiary" @click="enterEditMode">Edit</NcButton>
 			</template>
 			<template v-else>
-				<span v-if="saveError" class="file-header__error">{{ saveError }}</span>
-				<NcButton type="primary" :disabled="saving" @click="save">Save</NcButton>
-				<NcButton type="tertiary" :disabled="saving" @click="cancel">Cancel</NcButton>
+				<span v-if="saveError" class="file-header__error">{{
+					saveError
+				}}</span>
+				<NcButton variant="primary" :disabled="saving" @click="save"
+					>Save</NcButton
+				>
+				<NcButton variant="tertiary" :disabled="saving" @click="cancel"
+					>Cancel</NcButton
+				>
 			</template>
 		</header>
 		<div v-if="loading" class="file-loading">
 			<span class="icon-loading" />
 		</div>
-		<OrgView v-else-if="!editMode" :content="rawContent" :full-width="true" :id-map="idMap" />
+		<OrgView
+			v-else-if="!editMode"
+			:content="rawContent"
+			:fullWidth="true"
+			:idMap="idMap" />
 		<OrgEditor v-else v-model="editedContent" />
 	</div>
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue'
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import axios from '@nextcloud/axios'
+import { computed, defineComponent, ref } from 'vue'
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import OrgView from '../views/OrgView.vue'
 import OrgEditor from './OrgEditor.vue'
@@ -38,14 +50,17 @@ export default defineComponent({
 			type: String,
 			required: true,
 		},
+
 		idMap: {
 			type: Object,
 			default: () => ({}),
 		},
+
 		title: {
 			type: String,
 			default: null,
 		},
+
 		mtime: {
 			type: Number,
 			default: null,
@@ -65,10 +80,15 @@ export default defineComponent({
 		const formattedMtime = computed(() => {
 			if (!props.mtime) return null
 			return new Date(props.mtime * 1000).toLocaleDateString(undefined, {
-				year: 'numeric', month: 'long', day: 'numeric',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
 			})
 		})
 
+		/**
+		 *
+		 */
 		async function fetchContent() {
 			loading.value = true
 			try {
@@ -83,11 +103,17 @@ export default defineComponent({
 
 		fetchContent()
 
+		/**
+		 *
+		 */
 		function enterEditMode() {
 			editedContent.value = rawContent.value
 			editMode.value = true
 		}
 
+		/**
+		 *
+		 */
 		async function save() {
 			saving.value = true
 			saveError.value = null
@@ -97,12 +123,18 @@ export default defineComponent({
 				rawContent.value = editedContent.value
 				editMode.value = false
 			} catch (err) {
-				saveError.value = err?.response?.data?.ocs?.meta?.message ?? err?.message ?? 'Failed to save'
+				saveError.value =
+					err?.response?.data?.ocs?.meta?.message
+					?? err?.message
+					?? 'Failed to save'
 			} finally {
 				saving.value = false
 			}
 		}
 
+		/**
+		 *
+		 */
 		function cancel() {
 			if (isDirty.value) {
 				if (!window.confirm('Discard unsaved changes?')) return
@@ -111,6 +143,9 @@ export default defineComponent({
 			editMode.value = false
 		}
 
+		/**
+		 *
+		 */
 		function guardNavigation() {
 			if (isDirty.value) {
 				return window.confirm('You have unsaved changes. Discard them?')
@@ -148,7 +183,11 @@ export default defineComponent({
 	align-items: center;
 	flex-wrap: wrap;
 	column-gap: 8px;
-	padding: var(--app-navigation-padding, 4px) 20px var(--app-navigation-padding, 4px) calc(var(--default-clickable-area) + var(--app-navigation-padding, 4px) + 8px);
+	padding: var(--app-navigation-padding, 4px) 20px
+		var(--app-navigation-padding, 4px)
+		calc(
+			var(--default-clickable-area) + var(--app-navigation-padding, 4px) + 8px
+		);
 	border-bottom: 1px solid var(--color-border);
 }
 
