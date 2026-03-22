@@ -1,9 +1,9 @@
-import OrgView from './views/OrgView.vue'
+import OrgViewHandler from './views/OrgViewHandler.js'
 
 const handler = {
 	id: 'org-mode',
 	mimes: ['text/org'],
-	component: OrgView,
+	component: OrgViewHandler,
 }
 
 // Queue via the standard mechanism (fallback).
