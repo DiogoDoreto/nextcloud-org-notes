@@ -27,8 +27,7 @@
             filter =
               name: _type:
               let
-                base = builtins.baseNameOf name;
-                allowed = [
+                appDirs = [
                   "appinfo"
                   "css"
                   "img"
@@ -36,6 +35,8 @@
                   "lib"
                   "src"
                   "templates"
+                ];
+                rootFiles = [
                   "composer.json"
                   "package.json"
                   "pnpm-lock.yaml"
@@ -43,8 +44,11 @@
                   "vite.config.app.js"
                   "eslint.config.js"
                 ];
+                inAppDir = builtins.any (
+                  dir: builtins.match (".*/" + dir + "(/.*)?") name != null
+                ) appDirs;
               in
-              builtins.elem base allowed;
+              inAppDir || builtins.elem (builtins.baseNameOf name) rootFiles;
           };
 
           pnpmDeps = pkgs.fetchPnpmDeps {
