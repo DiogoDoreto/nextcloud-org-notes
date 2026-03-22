@@ -6,11 +6,7 @@ const handler = {
 	component: OrgViewHandler,
 }
 
-// Queue via the standard mechanism (fallback).
-window._oca_viewer_handlers ??= new Map()
-window._oca_viewer_handlers.set(handler.id, handler)
-
-// Also insert directly into _state.handlers before the Text app handler,
+// Insert directly into _state.handlers before the Text app handler,
 // which explicitly claims text/org. All other handlers register synchronously
 // during script execution (before DOMContentLoaded). Our init script adds this
 // listener first, so it fires before Viewer.vue's DOMContentLoaded callback
