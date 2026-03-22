@@ -15,7 +15,7 @@
 				<NcButton variant="primary" :disabled="saving" @click="save"
 					>Save</NcButton
 				>
-				<NcButton variant="tertiary" :disabled="saving" @click="cancel"
+				<NcButton variant="secondary" :disabled="saving" @click="cancel"
 					>Cancel</NcButton
 				>
 			</template>
