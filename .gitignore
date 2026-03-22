@@ -1,6 +1,6 @@
-app/node_modules/
-app/css/
-app/js/
+node_modules/
+css/
+js/
 
 /result
 /deps

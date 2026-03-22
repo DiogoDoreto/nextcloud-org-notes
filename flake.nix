@@ -23,8 +23,28 @@
           pname = "orgnotes";
           version = "0.1.0";
           src = pkgs.lib.cleanSourceWith {
-            src = ./app;
-            filter = name: _type: builtins.baseNameOf name != "node_modules";
+            src = ./.;
+            filter =
+              name: _type:
+              let
+                base = builtins.baseNameOf name;
+                allowed = [
+                  "appinfo"
+                  "css"
+                  "img"
+                  "js"
+                  "lib"
+                  "src"
+                  "templates"
+                  "composer.json"
+                  "package.json"
+                  "pnpm-lock.yaml"
+                  "vite.config.js"
+                  "vite.config.app.js"
+                  "eslint.config.js"
+                ];
+              in
+              builtins.elem base allowed;
           };
 
           pnpmDeps = pkgs.fetchPnpmDeps {

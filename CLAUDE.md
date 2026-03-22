@@ -4,7 +4,6 @@ Nextcloud app that renders `.org` files in the Nextcloud Viewer as formatted HTM
 
 ## Structure
 
-- `app/` — the Nextcloud app (PHP + Vue 3 frontend)
 - `openspec/` — change proposals and implementation tasks
 - `specs/` — main specs
 
@@ -12,7 +11,7 @@ Nextcloud app that renders `.org` files in the Nextcloud Viewer as formatted HTM
 
 ```bash
 # JS frontend
-cd app && pnpm run build   # outputs to app/js/
+pnpm run build   # outputs to js/
 
 # Nix package
 nix build                  # outputs appinfo/ lib/ templates/ js/
@@ -29,7 +28,7 @@ Always reuse exported components and utilities from `@nextcloud/vue`. You can fi
 
 ## Nix notes
 
-- `src` filters out `node_modules/` via `cleanSourceWith` — new source files must be `git add`ed or Nix won't include them
+- `src` uses an allowlist filter via `cleanSourceWith` — new source directories must be added to the allowlist in `flake.nix` and `git add`ed or Nix won't include them
 - Update `pnpmDeps.hash` whenever `pnpm-lock.yaml` changes (run with a bogus hash to get the correct one from the error output)
 
 ## Peer dependency warnings (expected)
