@@ -97,6 +97,5 @@ export default defineComponent({
 .app-icon-circle img {
 	width: 40px;
 	height: 40px;
-	filter: var(--primary-invert-if-bright);
 }
 </style>
