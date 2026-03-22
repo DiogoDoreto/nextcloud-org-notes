@@ -1,4 +1,11 @@
+import orgViewerStyles from './OrgViewHandler.css?inline'
 import axios from '@nextcloud/axios'
+
+// Inject styles once. Vite IIFE lib mode drops CSS files; inline import embeds
+// the CSS as a string so we can inject it ourselves.
+const styleEl = document.createElement('style')
+styleEl.textContent = orgViewerStyles
+document.head.appendChild(styleEl)
 import { unified } from 'unified'
 import uniorgParse from 'uniorg-parse'
 import uniorgRehype from 'uniorg-rehype'
@@ -71,15 +78,19 @@ export default {
 
 		if (this.error) {
 			return h('div', { class: classes }, [
-				h('div', { class: ['org-viewer__error'] }, [this.error]),
+				h('div', { class: ['org-viewer__inner'] }, [
+					h('div', { class: ['org-viewer__error'] }, [this.error]),
+				]),
 			])
 		}
 
 		return h('div', { class: classes }, [
-			h('div', {
-				class: ['org-viewer__content'],
-				domProps: { innerHTML: this.html },
-			}),
+			h('div', { class: ['org-viewer__inner'] }, [
+				h('div', {
+					class: ['org-viewer__content'],
+					domProps: { innerHTML: this.html },
+				}),
+			]),
 		])
 	},
 }
