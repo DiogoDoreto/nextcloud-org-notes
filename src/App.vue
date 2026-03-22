@@ -25,7 +25,7 @@ import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcContent from '@nextcloud/vue/components/NcContent'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import OrgFile from './components/OrgFile.vue'
-import Sidebar from './components/Sidebar.vue'
+import Sidebar from './components/OrgSidebar.vue'
 
 export default defineComponent({
 	name: 'OrgBrowser',

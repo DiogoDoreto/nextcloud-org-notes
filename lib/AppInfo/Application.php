@@ -19,11 +19,15 @@ class Application extends App implements IBootstrap {
 
     public function register(IRegistrationContext $context): void {
         $context->registerService(OrgController::class, function ($c) {
+            $user = $c->get(\OCP\IUserSession::class)->getUser();
+            if ($user === null) {
+                throw new \RuntimeException('OrgController requires an authenticated user');
+            }
             return new OrgController(
                 self::APP_ID,
                 $c->get(\OCP\IRequest::class),
                 $c->get(\OCP\Files\IRootFolder::class),
-                $c->get(\OCP\IUserSession::class)->getUser()->getUID(),
+                $user->getUID(),
             );
         });
     }

@@ -12,13 +12,10 @@
 </template>
 
 <script>
-import rehypeHighlight from 'rehype-highlight'
-import rehypeStringify from 'rehype-stringify'
-import { unified } from 'unified'
-import uniorgParse from 'uniorg-parse'
-import uniorgRehype from 'uniorg-rehype'
+import { defineComponent, ref, watch } from 'vue'
+import { renderOrg } from '../lib/renderOrg.js'
 
-export default {
+export default defineComponent({
 	name: 'OrgView',
 
 	props: {
@@ -38,64 +35,30 @@ export default {
 		},
 	},
 
-	data() {
-		return {
-			html: '',
-			loading: true,
-			error: null,
-		}
-	},
+	setup(props) {
+		const html = ref('')
+		const loading = ref(true)
+		const error = ref(null)
 
-	watch: {
-		content: { immediate: true, handler: 'renderContent' },
-	},
+		watch(
+			() => props.content,
+			async (content) => {
+				loading.value = true
+				error.value = null
+				try {
+					html.value = await renderOrg(content, { idMap: props.idMap })
+				} catch (err) {
+					error.value = err?.message ?? 'Failed to render file'
+				} finally {
+					loading.value = false
+				}
+			},
+			{ immediate: true },
+		)
 
-	methods: {
-		async renderContent() {
-			this.loading = true
-			this.error = null
-			try {
-				const idMap = this.idMap
-				const result = await unified()
-					.use(uniorgParse)
-					.use(uniorgRehype, {
-						handlers: {
-							keyword: function () {
-								return null
-							},
-							link: function (org) {
-								if (org.linkType === 'id') {
-									const path = idMap[org.path]
-									const children = org.children.length
-										? this.toHast(org.children, org)
-										: [{ type: 'text', value: org.rawLink }]
-									if (path) {
-										return this.h(
-											org,
-											'a',
-											{
-												href: `#/?file=${encodeURIComponent(path)}`,
-											},
-											children,
-										)
-									}
-									return this.h(org, 'span', {}, children)
-								}
-							},
-						},
-					})
-					.use(rehypeHighlight)
-					.use(rehypeStringify)
-					.process(this.content)
-				this.html = String(result)
-			} catch (err) {
-				this.error = err?.message ?? 'Failed to render file'
-			} finally {
-				this.loading = false
-			}
-		},
+		return { html, loading, error }
 	},
-}
+})
 </script>
 
 <style scoped>

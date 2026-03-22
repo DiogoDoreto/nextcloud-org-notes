@@ -1,4 +1,5 @@
 import axios from '@nextcloud/axios'
+import { renderOrg } from '../lib/renderOrg.js'
 
 import orgViewerStyles from './OrgViewHandler.css?inline'
 
@@ -7,11 +8,6 @@ import orgViewerStyles from './OrgViewHandler.css?inline'
 const styleEl = document.createElement('style')
 styleEl.textContent = orgViewerStyles
 document.head.appendChild(styleEl)
-import rehypeHighlight from 'rehype-highlight'
-import rehypeStringify from 'rehype-stringify'
-import { unified } from 'unified'
-import uniorgParse from 'uniorg-parse'
-import uniorgRehype from 'uniorg-rehype'
 
 // Vue 2.7-compatible viewer handler component (no template compilation).
 // The Nextcloud Viewer uses Vue 2.7 and calls render(h) with h as first arg.
@@ -49,19 +45,7 @@ export default {
 			const content = response.data?.ocs?.data?.content ?? ''
 			const titleMatch = content.match(/^#\+TITLE:\s*(.+)$/im)
 			this.title = titleMatch ? titleMatch[1].trim() : null
-			const result = await unified()
-				.use(uniorgParse)
-				.use(uniorgRehype, {
-					handlers: {
-						keyword() {
-							return null
-						},
-					},
-				})
-				.use(rehypeHighlight)
-				.use(rehypeStringify)
-				.process(content)
-			this.html = String(result)
+			this.html = await renderOrg(content)
 		} catch (err) {
 			this.error = err?.message ?? 'Failed to load file'
 		} finally {

@@ -29,13 +29,7 @@ class OrgController extends OCSController {
         foreach ($files as $file) {
             $path = $userFolder->getRelativePath($file->getPath());
             if ($path !== null && str_starts_with($path, '/Notes/')) {
-                $handle = $file->fopen('r');
-                if ($handle !== false) {
-                    $header = fread($handle, 2048);
-                    fclose($handle);
-                } else {
-                    $header = substr($file->getContent(), 0, 2048);
-                }
+                $header = substr($file->getContent(), 0, 2048);
                 $title = null;
                 $id = null;
                 if (preg_match('/^#\+TITLE:\s*(.+)$/mi', $header, $m)) {
@@ -60,6 +54,9 @@ class OrgController extends OCSController {
      * @NoAdminRequired
      */
     public function getFile(string $path): DataResponse {
+        if (!str_starts_with($path, '/Notes/')) {
+            return new DataResponse([], 403);
+        }
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
@@ -74,6 +71,9 @@ class OrgController extends OCSController {
      * @NoAdminRequired
      */
     public function putFile(string $path, string $content): DataResponse {
+        if (!str_starts_with($path, '/Notes/')) {
+            return new DataResponse([], 403);
+        }
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
