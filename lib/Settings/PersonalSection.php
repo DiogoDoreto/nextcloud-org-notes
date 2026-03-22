@@ -2,13 +2,11 @@
 
 namespace OCA\OrgNotes\Settings;
 
-use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
 class PersonalSection implements IIconSection {
     public function __construct(
-        private IL10N $l,
         private IURLGenerator $urlGenerator,
     ) {
     }
@@ -18,7 +16,7 @@ class PersonalSection implements IIconSection {
     }
 
     public function getName(): string {
-        return $this->l->t('Org Notes');
+        return 'Org Notes';
     }
 
     public function getPriority(): int {
