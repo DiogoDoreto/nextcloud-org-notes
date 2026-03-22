@@ -5,7 +5,7 @@
 				<template #icon><strong>B</strong></template>
 			</NcButton>
 			<NcButton type="tertiary" :aria-label="'Italic'" title="Italic (/)" @click="applyFormat('/')">
-				<template #icon><em>I</em></template>
+				<template #icon><span style="font-style: italic;">I</span></template>
 			</NcButton>
 			<NcButton type="tertiary" :aria-label="'Verbatim'" title="Verbatim (=)" @click="applyFormat('=')">
 				<template #icon><code>=</code></template>
