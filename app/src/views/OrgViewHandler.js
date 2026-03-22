@@ -33,6 +33,7 @@ export default {
 
 	data() {
 		return {
+			title: null,
 			html: '',
 			loading: true,
 			error: null,
@@ -45,6 +46,8 @@ export default {
 			const url = `/ocs/v2.php/apps/orgnotes/api/v1/file?path=${encodeURIComponent(path)}&format=json`
 			const response = await axios.get(url)
 			const content = response.data?.ocs?.data?.content ?? ''
+			const titleMatch = content.match(/^#\+TITLE:\s*(.+)$/mi)
+			this.title = titleMatch ? titleMatch[1].trim() : null
 			const result = await unified()
 				.use(uniorgParse)
 				.use(uniorgRehype, {
@@ -84,13 +87,17 @@ export default {
 			])
 		}
 
+		const inner = []
+		if (this.title) {
+			inner.push(h('h2', { class: ['org-viewer__title'] }, [this.title]))
+		}
+		inner.push(h('div', {
+			class: ['org-viewer__content'],
+			domProps: { innerHTML: this.html },
+		}))
+
 		return h('div', { class: classes }, [
-			h('div', { class: ['org-viewer__inner'] }, [
-				h('div', {
-					class: ['org-viewer__content'],
-					domProps: { innerHTML: this.html },
-				}),
-			]),
+			h('div', { class: ['org-viewer__inner'] }, inner),
 		])
 	},
 }
