@@ -126,10 +126,11 @@ export default defineComponent({
 		}
 
 		/**
+		 * Returns a human-readable month label, including the year when it differs from the current year.
 		 *
-		 * @param year
-		 * @param monthIndex
-		 * @param currentYear
+		 * @param {number} year Full year of the month being labelled
+		 * @param {number} monthIndex Zero-based month index (0 = January)
+		 * @param {number} currentYear The current year, used to omit the year suffix when redundant
 		 */
 		function monthLabel(year, monthIndex, currentYear) {
 			const name = new Date(year, monthIndex, 1).toLocaleString('default', {

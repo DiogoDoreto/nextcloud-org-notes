@@ -118,8 +118,9 @@ const nextcloudTheme = EditorView.theme({
 })
 
 /**
+ * Returns a CodeMirror command that wraps the current selection with a delimiter.
  *
- * @param delim
+ * @param {string} delim The delimiter to wrap around the selection (e.g. `*` for bold)
  */
 function wrapSelection(delim) {
 	return (view) => {
@@ -155,17 +156,19 @@ export default defineComponent({
 		const extensions = [basicSetup, nextcloudTheme]
 
 		/**
+		 * Called by Codemirror when the editor is mounted; stores the EditorView reference.
 		 *
-		 * @param root0
-		 * @param root0.view
+		 * @param {object} root0 The ready event payload from vue-codemirror
+		 * @param {object} root0.view The CodeMirror EditorView instance
 		 */
 		function onReady({ view }) {
 			editorView.value = view
 		}
 
 		/**
+		 * Applies a wrapping delimiter to the current editor selection.
 		 *
-		 * @param delim
+		 * @param {string} delim The delimiter to wrap around the selection (e.g. `*` for bold)
 		 */
 		function applyFormat(delim) {
 			if (!editorView.value) return

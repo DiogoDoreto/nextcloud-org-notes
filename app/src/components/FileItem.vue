@@ -29,8 +29,9 @@ export default defineComponent({
 		const isActive = computed(() => route.query.file === props.file.path)
 
 		/**
+		 * Navigate to this file, preventing default link behaviour.
 		 *
-		 * @param event
+		 * @param {Event} event The triggering DOM event
 		 */
 		function open(event) {
 			event?.preventDefault()
