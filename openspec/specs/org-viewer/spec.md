@@ -7,11 +7,19 @@ The Vue component that fetches and renders `.org` files as formatted HTML inside
 ## Requirements
 
 ### Requirement: Viewer handler is registered for text/org
-The app's `main.js` SHALL call `registerHandler` from `@nextcloud/viewer` with `id: 'org-mode'` and `mimes: ['text/org']`, pointing to `OrgView.vue`. This causes Nextcloud's Viewer modal to open `.org` files using the app's component instead of the default text display.
+`main.js` SHALL register a viewer handler with `id: 'org-mode'` and `mimes: ['text/org']`, pointing to `OrgViewHandler.js`. The handler component SHALL be a Vue 2.7-compatible plain JS component using a `render(h)` function (not an SFC), because the Nextcloud Viewer runs Vue 2.7 and a Vue 3-compiled SFC template crashes at render time.
+
+`main.js` SHALL insert the handler directly into `OCA.Viewer._state.handlers` before the `text` handler via a `DOMContentLoaded` listener. It SHALL also remove `text/org` from the `text` handler's `mimes` array to prevent a duplicate-registration console error. This listener is registered as an init script so it fires before Viewer.vue's own `DOMContentLoaded` callback.
+
+`Application.php::boot()` SHALL register a listener for `OCA\Files\Event\LoadAdditionalScriptsEvent` via the `IEventDispatcher` and call `\OCP\Util::addInitScript('orgnotes', 'main')` inside that listener. This ensures `main.js` is injected into the Nextcloud Files app page before `DOMContentLoaded` handlers registered by other scripts run.
 
 #### Scenario: Clicking a .org file opens the Org viewer
 - **WHEN** a user clicks a `.org` file in the Nextcloud Files app
-- **THEN** the Nextcloud Viewer modal opens and renders the file using `OrgView.vue`
+- **THEN** the Nextcloud Viewer modal opens and renders the file using `OrgViewHandler.js`
+
+#### Scenario: main.js is present in Files app page scripts
+- **WHEN** the Nextcloud Files app page is loaded
+- **THEN** `main.js` from the orgnotes app is included in the page's script resources
 
 ### Requirement: OrgView renders Org content as formatted HTML
 `OrgView.vue` SHALL fetch the file at the `path` prop via the OCS API and render the parsed result as HTML. The unified pipeline SHALL include `uniorg-parse`, `uniorg-rehype`, `rehype-highlight`, and `rehype-stringify`. The rendered output SHALL correctly represent: headings (all levels), paragraphs, bold/italic/code inline markup, hyperlinks, tables, fenced and `#+BEGIN_SRC` code blocks with language-aware syntax highlighting, TODO keywords, and timestamps.
