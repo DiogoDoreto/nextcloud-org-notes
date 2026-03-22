@@ -24,7 +24,9 @@
 				No org files found in your notes folder. Use the
 				<strong>Settings</strong> button below to change the folder.
 			</p>
-			<p v-else-if="sortedFiles.length === 0" class="sidebar-empty-state">
+			<p
+				v-else-if="filterQuery && sortedFiles.length === 0"
+				class="sidebar-empty-state">
 				No files match your filter.
 			</p>
 			<template v-else-if="fileGroups">
@@ -282,8 +284,5 @@ export default defineComponent({
 	font-size: 13px;
 	padding: 12px 8px;
 	margin: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 </style>
