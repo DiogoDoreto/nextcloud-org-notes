@@ -42,13 +42,11 @@
 		</template>
 		<template #footer>
 			<div class="sidebar-footer">
-				<NcButton
-					:href="settingsUrl"
-					aria-label="Settings"
-					variant="tertiary">
+				<NcButton :href="settingsUrl" variant="tertiary" wide>
 					<template #icon>
 						<NcIconSvgWrapper :path="cogPath" :size="20" />
 					</template>
+					Org Notes settings
 				</NcButton>
 			</div>
 		</template>
@@ -274,8 +272,6 @@ export default defineComponent({
 }
 
 .sidebar-footer {
-	display: flex;
-	justify-content: flex-end;
 	padding: 4px 8px;
 }
 

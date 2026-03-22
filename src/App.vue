@@ -9,10 +9,17 @@
 				:idMap="idMap"
 				:title="selectedFileData.title ?? selectedFileData.name"
 				:mtime="selectedFileData.mtime" />
-			<NcEmptyContent
-				v-else
-				name="Select a file"
-				description="Select a file from the sidebar to view it." />
+			<div v-else class="app-empty-state">
+				<NcEmptyContent
+					name="Select a file"
+					description="Select a file from the sidebar to view it.">
+					<template #icon>
+						<div class="app-icon-circle">
+							<img :src="appIconUrl" alt="" />
+						</div>
+					</template>
+				</NcEmptyContent>
+			</div>
 		</NcAppContent>
 	</NcContent>
 </template>
@@ -26,6 +33,7 @@ import NcContent from '@nextcloud/vue/components/NcContent'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import OrgFile from './components/OrgFile.vue'
 import Sidebar from './components/OrgSidebar.vue'
+import appIconUrl from '../img/app.svg?url'
 
 export default defineComponent({
 	name: 'OrgBrowser',
@@ -65,7 +73,29 @@ export default defineComponent({
 				: null
 		})
 
-		return { files, loading, idMap, selectedFileData }
+		return { appIconUrl, files, loading, idMap, selectedFileData }
 	},
 })
 </script>
+
+<style scoped>
+.app-empty-state {
+	height: 100%;
+	display: flex;
+}
+
+.app-icon-circle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background-color: var(--color-primary);
+}
+
+.app-icon-circle img {
+	width: 40px;
+	height: 40px;
+}
+</style>
