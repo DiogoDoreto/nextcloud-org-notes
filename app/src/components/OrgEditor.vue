@@ -38,8 +38,7 @@ const nextcloudTheme = EditorView.theme({
 		height: '100%',
 	},
 	'&.cm-focused': {
-		outline: '2px solid var(--color-primary-element)',
-		outlineOffset: '-2px',
+		outline: 'none',
 	},
 	'.cm-content': {
 		caretColor: 'var(--color-main-text)',
