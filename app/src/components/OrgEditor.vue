@@ -45,12 +45,17 @@ const nextcloudTheme = EditorView.theme({
 		caretColor: 'var(--color-main-text)',
 		fontFamily: 'monospace',
 		padding: '8px 0',
+		border: 'none !important',
 	},
 	'.cm-cursor, .cm-dropCursor': {
 		borderLeftColor: 'var(--color-main-text)',
 	},
-	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, ::selection': {
-		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 25%, transparent)',
+	'&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground': {
+		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
+	},
+	'::selection': {
+		backgroundColor: 'color-mix(in srgb, var(--color-primary-element) 45%, transparent)',
+		color: 'var(--color-main-text)',
 	},
 	'.cm-gutters': {
 		backgroundColor: 'var(--color-background-dark)',
