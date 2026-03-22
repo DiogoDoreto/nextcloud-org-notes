@@ -17,7 +17,17 @@
 			</NcAppNavigationSearch>
 		</template>
 		<template #list>
-			<template v-if="fileGroups">
+			<div v-if="loading" class="sidebar-empty-state">
+				<NcLoadingIcon :size="32" />
+			</div>
+			<p v-else-if="files.length === 0" class="sidebar-empty-state">
+				No org files found in your notes folder. Use the
+				<strong>Settings</strong> button below to change the folder.
+			</p>
+			<p v-else-if="sortedFiles.length === 0" class="sidebar-empty-state">
+				No files match your filter.
+			</p>
+			<template v-else-if="fileGroups">
 				<div
 					v-for="group in fileGroups"
 					:key="group.label"
@@ -51,6 +61,7 @@ import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationSearch from '@nextcloud/vue/components/NcAppNavigationSearch'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcIconSvgWrapper from '@nextcloud/vue/components/NcIconSvgWrapper'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import FileList from './FileList.vue'
 
 // MDI cog icon path
@@ -67,6 +78,7 @@ export default defineComponent({
 		NcActionRadio,
 		NcButton,
 		NcIconSvgWrapper,
+		NcLoadingIcon,
 		FileList,
 	},
 
@@ -74,6 +86,11 @@ export default defineComponent({
 		files: {
 			type: Array,
 			required: true,
+		},
+
+		loading: {
+			type: Boolean,
+			default: false,
 		},
 	},
 
@@ -258,5 +275,15 @@ export default defineComponent({
 	display: flex;
 	justify-content: flex-end;
 	padding: 4px 8px;
+}
+
+.sidebar-empty-state {
+	color: var(--color-text-maxcontrast);
+	font-size: 13px;
+	padding: 12px 8px;
+	margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 </style>

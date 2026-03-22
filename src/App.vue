@@ -1,6 +1,6 @@
 <template>
 	<NcContent appName="orgnotes">
-		<Sidebar :files="files" />
+		<Sidebar :files="files" :loading="loading" />
 		<NcAppContent>
 			<OrgFile
 				v-if="selectedFileData"
@@ -35,6 +35,7 @@ export default defineComponent({
 	setup() {
 		const route = useRoute()
 		const files = ref([])
+		const loading = ref(true)
 
 		onMounted(async () => {
 			try {
@@ -43,6 +44,8 @@ export default defineComponent({
 				files.value = response.data?.ocs?.data ?? []
 			} catch {
 				files.value = []
+			} finally {
+				loading.value = false
 			}
 		})
 
@@ -62,7 +65,7 @@ export default defineComponent({
 				: null
 		})
 
-		return { files, idMap, selectedFileData }
+		return { files, loading, idMap, selectedFileData }
 	},
 })
 </script>
