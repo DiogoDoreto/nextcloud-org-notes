@@ -23,7 +23,7 @@ class OrgController extends OCSController {
      */
     public function listFiles(): DataResponse {
         $userFolder = $this->rootFolder->getUserFolder($this->userId);
-        $files = $userFolder->searchByMime('text/org');
+        $files = $userFolder->searchByMime('text/x-org');
         $result = [];
         foreach ($files as $file) {
             $path = $userFolder->getRelativePath($file->getPath());
