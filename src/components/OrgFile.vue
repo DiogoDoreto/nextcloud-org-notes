@@ -87,7 +87,8 @@ export default defineComponent({
 		})
 
 		/**
-		 *
+		 * Fetches the raw org file content from the OCS API and initialises both
+		 * rawContent and editedContent. Sets loading true for the duration.
 		 */
 		async function fetchContent() {
 			loading.value = true
@@ -104,7 +105,8 @@ export default defineComponent({
 		fetchContent()
 
 		/**
-		 *
+		 * Switches the component into edit mode, seeding the editor with the
+		 * current rawContent so any unsaved prior edits are discarded.
 		 */
 		function enterEditMode() {
 			editedContent.value = rawContent.value
@@ -112,7 +114,9 @@ export default defineComponent({
 		}
 
 		/**
-		 *
+		 * Persists editedContent to the server via the OCS API. On success,
+		 * updates rawContent and exits edit mode. On failure, stores the error
+		 * message in saveError for display.
 		 */
 		async function save() {
 			saving.value = true
@@ -133,7 +137,8 @@ export default defineComponent({
 		}
 
 		/**
-		 *
+		 * Exits edit mode, prompting the user for confirmation if there are
+		 * unsaved changes. Resets editedContent to rawContent on discard.
 		 */
 		function cancel() {
 			if (isDirty.value) {
@@ -144,7 +149,11 @@ export default defineComponent({
 		}
 
 		/**
+		 * Vue Router navigation guard used for both route-leave and route-update
+		 * events. Prompts the user to confirm discarding unsaved changes before
+		 * allowing navigation to proceed.
 		 *
+		 * @return {boolean} true to allow navigation, false to cancel it
 		 */
 		function guardNavigation() {
 			if (isDirty.value) {
