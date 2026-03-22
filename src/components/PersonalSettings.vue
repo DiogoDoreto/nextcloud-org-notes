@@ -6,10 +6,11 @@
 			<NcTextField
 				v-model="directory"
 				label="Notes directory"
+				:disabled="loading"
 				:error="!!errorMessage"
 				:helperText="errorMessage || successMessage"
 				:success="!!successMessage" />
-			<NcButton :disabled="saving" variant="primary" @click="save">
+			<NcButton :disabled="loading || saving" variant="primary" @click="save">
 				Save
 			</NcButton>
 		</div>
@@ -17,7 +18,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
@@ -29,7 +30,8 @@ export default defineComponent({
 	components: { NcButton, NcSettingsSection, NcTextField },
 
 	setup() {
-		const directory = ref('Notes')
+		const directory = ref('')
+		const loading = ref(true)
 		const saving = ref(false)
 		const errorMessage = ref('')
 		const successMessage = ref('')
@@ -39,12 +41,18 @@ export default defineComponent({
 				const data = await getSettings()
 				directory.value = data.notesDirectory ?? 'Notes'
 			} catch {
-				// leave default
+				directory.value = 'Notes'
+			} finally {
+				loading.value = false
 			}
 		})
 
+		watch(directory, () => {
+			successMessage.value = ''
+		})
+
 		/**
-		 *
+		 * Validates and saves the notes directory setting via the API.
 		 */
 		async function save() {
 			errorMessage.value = ''
@@ -69,7 +77,7 @@ export default defineComponent({
 			}
 		}
 
-		return { directory, saving, errorMessage, successMessage, save }
+		return { directory, loading, saving, errorMessage, successMessage, save }
 	},
 })
 </script>

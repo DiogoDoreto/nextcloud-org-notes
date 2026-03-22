@@ -3,7 +3,9 @@ import axios from '@nextcloud/axios'
 const BASE = '/ocs/v2.php/apps/orgnotes/api/v1'
 
 /**
+ * Fetches the current user settings from the orgnotes API.
  *
+ * @return {Promise<object>} Resolved settings data object
  */
 export async function getSettings() {
 	const response = await axios.get(`${BASE}/settings?format=json`)

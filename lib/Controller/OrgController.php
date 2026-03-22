@@ -25,12 +25,15 @@ class OrgController extends OCSController {
         return $this->config->getUserValue($this->userId, 'orgnotes', 'notesDirectory', 'Notes');
     }
 
+    private function getNotesPrefix(): string {
+        return '/' . $this->getNotesDirectory() . '/';
+    }
+
     /**
      * @NoAdminRequired
      */
     public function listFiles(): DataResponse {
-        $dir = $this->getNotesDirectory();
-        $prefix = '/' . $dir . '/';
+        $prefix = $this->getNotesPrefix();
         $userFolder = $this->rootFolder->getUserFolder($this->userId);
         $files = $userFolder->searchByMime('text/org');
         $result = [];
@@ -73,8 +76,7 @@ class OrgController extends OCSController {
      */
     public function getFile(string $path): DataResponse {
         try {
-            $dir = $this->getNotesDirectory();
-            $prefix = '/' . $dir . '/';
+            $prefix = $this->getNotesPrefix();
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
             // Check the normalised path after resolution to prevent traversal
@@ -95,8 +97,7 @@ class OrgController extends OCSController {
      */
     public function putFile(string $path, string $content): DataResponse {
         try {
-            $dir = $this->getNotesDirectory();
-            $prefix = '/' . $dir . '/';
+            $prefix = $this->getNotesPrefix();
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $file = $userFolder->get($path);
             // Check the normalised path after resolution to prevent traversal
@@ -128,6 +129,8 @@ class OrgController extends OCSController {
      * @NoAdminRequired
      */
     public function putSettings(string $notesDirectory): DataResponse {
+        // Strip surrounding whitespace and slashes before validating; a bare
+        // slash or empty string after trim is also rejected below.
         $value = trim($notesDirectory, " \t/");
         if ($value === '' || str_contains($value, '/') || str_contains($value, '..')) {
             return new DataResponse([], 400);
