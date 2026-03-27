@@ -55,7 +55,7 @@
           pnpmDeps = pkgs.fetchPnpmDeps {
             inherit (finalAttrs) pname version src;
             fetcherVersion = 3;
-            hash = "sha256-yiZvvNx85fIdmHU03k4U+U/vTAeaDXZEaXeh1rSnU1w=";
+            hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="; # TODO: update after `nix build` reports the correct hash
           };
 
           nativeBuildInputs = [

@@ -1,0 +1,75 @@
+/**
+ * Approximation of Nextcloud's CSS custom properties for use in Storybook.
+ * Allows components that reference var(--color-*) etc. to render correctly
+ * without a running Nextcloud instance.
+ */
+:root {
+	/* Main colours */
+	--color-main-background: #ffffff;
+	--color-main-text: #222222;
+	--color-background-dark: #f5f5f5;
+	--color-background-darker: #ebebeb;
+	--color-background-hover: #e8e8e8;
+
+	/* Primary / brand */
+	--color-primary: #0082c9;
+	--color-primary-element: #0082c9;
+	--color-primary-element-hover: #006ba3;
+	--color-primary-element-light: #e6f2fa;
+	--color-primary-element-light-hover: #cce5f5;
+	--color-primary-element-light-text: #0082c9;
+	--color-primary-element-text: #ffffff;
+	--color-primary-text: #0082c9;
+
+	/* Borders */
+	--color-border: #d8d8d8;
+	--color-border-dark: #c8c8c8;
+	--color-border-maxcontrast: #767676;
+
+	/* Text */
+	--color-text-maxcontrast: #6b6b6b;
+	--color-text-light: #999999;
+
+	/* Semantic */
+	--color-error: #e9322d;
+	--color-error-hover: #cc2b26;
+	--color-error-text: #ffffff;
+	--color-warning: #eca700;
+	--color-warning-hover: #d49600;
+	--color-warning-text: #ffffff;
+	--color-success: #46ba61;
+	--color-success-hover: #3da354;
+	--color-success-text: #ffffff;
+	--color-info: #0082c9;
+	--color-info-text: #ffffff;
+
+	/* Sizing */
+	--border-radius: 3px;
+	--border-radius-large: 8px;
+	--border-radius-pill: 100px;
+	--border-radius-rounded: 50%;
+	--border-radius-element: 6px;
+	--default-clickable-area: 44px;
+	--default-grid-baseline: 4px;
+	--app-navigation-padding: 4px;
+	--app-navigation-width: 300px;
+
+	/* Typography */
+	--font-face: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell,
+		'Noto Sans', sans-serif;
+	--font-size: 15px;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: var(--font-face);
+	font-size: var(--font-size);
+	color: var(--color-main-text);
+	background-color: var(--color-main-background);
+	margin: 0;
+}
