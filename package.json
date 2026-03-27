@@ -10,7 +10,8 @@
         "lint": "eslint src scripts vite.config*.js .storybook",
         "lint:fix": "eslint --fix src scripts vite.config*.js .storybook",
         "screenshots": "node scripts/screenshots.js",
-        "storybook": "storybook dev -p 6006"
+        "storybook": "storybook dev -p 6006",
+        "update-theme": "node scripts/update-theme.js"
     },
     "prettier": "@nextcloud/prettier-config",
     "dependencies": {
