@@ -65,6 +65,30 @@ setup((app) => {
 
 /** @type { import('@storybook/vue3-vite').Preview } */
 export default {
+	globalTypes: {
+		theme: {
+			name: 'Theme',
+			description: 'Nextcloud color theme',
+			defaultValue: 'light',
+			toolbar: {
+				icon: 'circlehollow',
+				items: [
+					{ value: 'light', title: 'Light', icon: 'sun' },
+					{ value: 'dark', title: 'Dark', icon: 'moon' },
+				],
+				dynamicTitle: true,
+			},
+		},
+	},
+	decorators: [
+		(story, context) => {
+			document.documentElement.setAttribute(
+				'data-theme',
+				context.globals.theme ?? 'light',
+			)
+			return story()
+		},
+	],
 	loaders: [mswLoader],
 	parameters: {
 		controls: {

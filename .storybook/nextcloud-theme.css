@@ -162,3 +162,85 @@ body {
 	top: -9999px;
 	inset-inline-start: -9999px;
 }
+
+/*
+ * Nextcloud dark theme CSS custom properties.
+ *
+ * Values are sourced from DarkTheme.php in the Nextcloud server repository
+ * (SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors,
+ * SPDX-License-Identifier: AGPL-3.0-or-later) with lightened/darkened shades
+ * computed using the same PHPColors HSL algorithm the server uses at runtime.
+ *
+ * Applied when the Storybook toolbar sets html[data-theme="dark"].
+ */
+html[data-theme="dark"] {
+  --color-main-text: #EBEBEB;
+  --color-main-background: #171717;
+  --color-main-background-rgb: 23,23,23;
+  --color-main-background-translucent: rgba(var(--color-main-background-rgb), .97);
+  --color-main-background-blur: rgba(var(--color-main-background-rgb), .85);
+  --gradient-main-background: var(--color-main-background) 0%, var(--color-main-background-translucent) 85%, transparent 100%;
+  --color-background-hover: #212121;
+  --color-background-dark: #292929;
+  --color-background-darker: #3b3b3b;
+  --color-placeholder-light: #313131;
+  --color-placeholder-dark: #4a4a4a;
+  --color-text-maxcontrast: #999999;
+  --color-text-maxcontrast-default: #999999;
+  --color-text-maxcontrast-background-blur: #a8a8a8;
+  --color-text-error: #ff6f6f;
+  --color-text-success: #49bb37;
+  --color-border: #292929;
+  --color-border-dark: #3b3b3b;
+  --color-border-maxcontrast: #7d7d7d;
+  --color-element-error: #FF5050;
+  --color-element-info: #0099E0;
+  --color-element-success: #40A330;
+  --color-element-warning: #FFCC00;
+  --color-error: #552121;
+  --color-error-hover: #7a2f2f;
+  --color-error-text: #FFCCCC;
+  --color-error-rgb: 85,33,33;
+  --color-warning: #3D3010;
+  --color-warning-hover: #65501b;
+  --color-warning-text: #FFEEC5;
+  --color-warning-rgb: 61,48,16;
+  --color-success: #11321A;
+  --color-success-hover: #1e582e;
+  --color-success-text: #D5F2DC;
+  --color-success-rgb: 17,50,26;
+  --color-info: #003553;
+  --color-info-hover: #005686;
+  --color-info-text: #00AEFF;
+  --color-info-rgb: 0,53,83;
+  --color-loading-light: #777777;
+  --color-loading-dark: #cccccc;
+  --color-box-shadow: #000000;
+  --color-box-shadow-rgb: 0,0,0;
+  --color-favorite: #ffde00;
+  --color-mark: #4d3800;
+  --color-background-selection: rgb(from var(--color-primary-element) r g b / 0.4);
+  --color-background-assistant: #221D2B;
+  --color-border-assistant: linear-gradient(125deg, #0C3A65 50%, #6204A5 125%);
+  --color-element-assistant: linear-gradient(214deg, #C8A3E8 12%, #007CFF 39%, #C297DD 86%);
+  --color-element-assistant-icon: linear-gradient(214deg, #CDACE7 15.28%, #008FDB 39.98%, #A180E0 82.05%);
+  --background-invert-if-dark: invert(100%);
+  --background-invert-if-bright: no;
+  --background-image-invert-if-bright: invert(100%);
+  /* Primary colors adjusted for dark background (#171717) */
+  --color-primary-element: #006ea8;
+  --color-primary-element-hover: #005784;
+  --color-primary-element-text: #ffffff;
+  --color-primary-element-text-dark: #ededed;
+  --color-primary-hover: #055783;
+  --color-primary-light: #152026;
+  --color-primary-light-text: #8db6cc;
+  --color-primary-light-hover: #1b282e;
+  --color-primary-element-light: var(--color-primary-light);
+  --color-primary-element-light-text: var(--color-primary-light-text);
+  --color-primary-element-light-hover: var(--color-primary-light-hover);
+  --color-background-plain: #006ea8;
+  --color-background-plain-text: #ffffff;
+  --primary-invert-if-bright: no;
+  --primary-invert-if-dark: invert(100%);
+}
