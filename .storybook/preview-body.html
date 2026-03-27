@@ -1,0 +1,10 @@
+<!--
+  Storybook body injection.
+
+  #skip-actions is the Teleport target used by NcContent (@nextcloud/vue) for
+  its skip-navigation buttons.  Without this element, the Teleport children are
+  never mounted and Vue crashes with "Cannot read properties of null (reading
+  'emitsOptions')" when NcContent re-renders after NcAppNavigation calls
+  setHasAppNavigation(true).
+-->
+<div id="skip-actions" aria-hidden="true"></div>

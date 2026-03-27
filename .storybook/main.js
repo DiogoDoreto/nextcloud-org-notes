@@ -6,6 +6,16 @@ const config = {
 		options: {},
 	},
 	staticDirs: ['../public'],
+	async viteFinal(viteConfig) {
+		viteConfig.define = {
+			...viteConfig.define,
+			// @nextcloud/vue reads these bare globals at module-init time.
+			// They are normally injected by the app's Vite build config.
+			appName: '"orgnotes"',
+			appVersion: '"0.1.0"',
+		}
+		return viteConfig
+	},
 }
 
 export default config
