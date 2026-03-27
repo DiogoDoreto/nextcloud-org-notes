@@ -5,8 +5,10 @@ import { mkdir, readFile } from 'fs/promises'
 import { createServer } from 'http'
 import { extname, join } from 'path'
 /**
- * Captures a PNG screenshot for every Storybook story and writes them under
- *   screenshots/{Title}/{Story name}.png
+ * Captures a PNG screenshot for every Storybook story in both light and dark
+ * theme variants and writes them under
+ *   screenshots/light/{Title}/{Story name}.png
+ *   screenshots/dark/{Title}/{Story name}.png
  *
  * The screenshots are committed to the repository so that git-diff / PR
  * review gives a visual baseline for every UI change.
@@ -26,6 +28,7 @@ const STATIC_DIR = join(ROOT, 'storybook-static')
 const SCREENSHOTS_DIR = join(ROOT, 'screenshots')
 const VIEWPORT = { width: 1280, height: 720 }
 const RENDER_TIMEOUT = 15_000
+const THEMES = ['light', 'dark']
 
 const MIME = {
 	'.html': 'text/html',
@@ -65,7 +68,7 @@ if (!existsSync(indexPath)) {
 
 const storiesIndex = JSON.parse(await readFile(indexPath, 'utf8'))
 const stories = Object.values(storiesIndex.entries).filter((s) => s.type === 'story')
-console.log(`Found ${stories.length} stories.`)
+console.log(`Found ${stories.length} stories × ${THEMES.length} themes.`)
 
 // ── 3. Serve the static build over HTTP (required for service workers) ───────
 
@@ -106,54 +109,61 @@ await warmupPage.close()
 let passed = 0
 let failed = 0
 
-for (const story of stories) {
-	const iframeUrl = `http://localhost:${port}/iframe.html?id=${story.id}&viewMode=story`
-	const page = await context.newPage()
+for (const theme of THEMES) {
+	for (const story of stories) {
+		const iframeUrl =
+			`http://localhost:${port}/iframe.html`
+			+ `?id=${story.id}&viewMode=story&globals=theme:${theme}`
+		const page = await context.newPage()
 
-	try {
-		await page.goto(iframeUrl, { waitUntil: 'domcontentloaded' })
+		try {
+			await page.goto(iframeUrl, { waitUntil: 'domcontentloaded' })
 
-		// Wait for async rendering to settle (spinner gone or content present)
-		await page
-			.waitForFunction(
-				() =>
-					!document.querySelector(
-						'#storybook-root .icon-loading, #storybook-root [data-loading]',
-					),
-				{ timeout: RENDER_TIMEOUT },
+			// Wait for async rendering to settle (spinner gone or content present)
+			await page
+				.waitForFunction(
+					() =>
+						!document.querySelector(
+							'#storybook-root .icon-loading, #storybook-root [data-loading]',
+						),
+					{ timeout: RENDER_TIMEOUT },
+				)
+				.catch(() => {}) // fall through – still screenshot whatever is visible
+
+			await page
+				.waitForLoadState('networkidle', { timeout: RENDER_TIMEOUT })
+				.catch(() => {})
+
+			// Safety buffer for CSS transitions / deferred paints
+			await page.waitForTimeout(300)
+
+			// screenshots/light/Components/OrgView/ or screenshots/dark/…
+			const titleSegments = story.title.split('/')
+			const storyDir = join(SCREENSHOTS_DIR, theme, ...titleSegments)
+			await mkdir(storyDir, { recursive: true })
+
+			const screenshotPath = join(storyDir, `${story.name}.png`)
+			await page.screenshot({ path: screenshotPath, fullPage: false })
+
+			console.log(`  ✓  [${theme}] ${story.title} / ${story.name}`)
+			passed++
+		} catch (err) {
+			console.error(
+				`  ✗  [${theme}] ${story.title} / ${story.name}: ${err.message}`,
 			)
-			.catch(() => {}) // fall through – still screenshot whatever is visible
-
-		await page
-			.waitForLoadState('networkidle', { timeout: RENDER_TIMEOUT })
-			.catch(() => {})
-
-		// Safety buffer for CSS transitions / deferred paints
-		await page.waitForTimeout(300)
-
-		// Compute output path: "Components/OrgView" → screenshots/Components/OrgView/
-		const titleSegments = story.title.split('/')
-		const storyDir = join(SCREENSHOTS_DIR, ...titleSegments)
-		await mkdir(storyDir, { recursive: true })
-
-		const screenshotPath = join(storyDir, `${story.name}.png`)
-		await page.screenshot({ path: screenshotPath, fullPage: false })
-
-		console.log(`  ✓  ${story.title} / ${story.name}`)
-		passed++
-	} catch (err) {
-		console.error(`  ✗  ${story.title} / ${story.name}: ${err.message}`)
-		failed++
-	} finally {
-		await page.close()
+			failed++
+		} finally {
+			await page.close()
+		}
 	}
 }
 
 await browser.close()
 server.close()
 
+const total = passed + failed
 console.log(
-	`\nDone — ${passed} screenshots saved to screenshots/`
+	`\nDone — ${passed}/${total} screenshots saved to screenshots/`
 		+ (failed ? `  (${failed} failed)` : ''),
 )
 if (failed) process.exit(1)
