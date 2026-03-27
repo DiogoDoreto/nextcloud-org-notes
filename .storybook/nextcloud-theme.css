@@ -1,65 +1,144 @@
 /**
- * Approximation of Nextcloud's CSS custom properties for use in Storybook.
- * Allows components that reference var(--color-*) etc. to render correctly
- * without a running Nextcloud instance.
+ * Nextcloud default CSS custom properties, sourced verbatim from:
+ * https://github.com/nextcloud/server/blob/master/apps/theming/css/default.css
+ *
+ * This gives Storybook the exact same design tokens that a real Nextcloud
+ * server would inject, so component screenshots match the real UI.
+ *
+ * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 :root {
-	/* Main colours */
-	--color-main-background: #ffffff;
-	--color-main-text: #222222;
-	--color-background-dark: #f5f5f5;
-	--color-background-darker: #ebebeb;
-	--color-background-hover: #e8e8e8;
+  --color-main-background: #ffffff;
+  --color-main-background-rgb: 255,255,255;
+  --color-main-background-translucent: rgba(var(--color-main-background-rgb), .97);
+  --color-main-background-blur: rgba(var(--color-main-background-rgb), .8);
+  --filter-background-blur: blur(25px);
+  --gradient-main-background: var(--color-main-background) 0%, var(--color-main-background-translucent) 85%, transparent 100%;
+  --color-background-hover: #f5f5f5;
+  /** Can be used e.g. to colorize selected table rows */
+  --color-background-dark: #ededed;
+  /** This should only be used for elements, not as a text background! Otherwise it will not work for accessibility. */
+  --color-background-darker: #dbdbdb;
+  --color-placeholder-light: #e6e6e6;
+  --color-placeholder-dark: #cccccc;
+  --color-main-text: #222222;
+  --color-text-maxcontrast: #6b6b6b;
+  --color-text-maxcontrast-default: #6b6b6b;
+  --color-text-maxcontrast-background-blur: #595959;
+  --color-text-error: #bf0000;
+  --color-text-success: #066e03;
+  --color-border: #ededed;
+  --color-border-dark: #dbdbdb;
+  --color-border-maxcontrast: #7d7d7d;
+  --color-border-error: var(--color-element-error);
+  --color-border-success: var(--color-element-success);
+  --color-element-error: #c90000;
+  --color-element-info: #0077C7;
+  --color-element-success: #099f05;
+  --color-element-warning: #BF7900;
+  --color-error: #FFE7E7;
+  --color-error-hover: #ffc3c3;
+  --color-error-text: #8A0000;
+  --color-warning: #FFEEC5;
+  --color-warning-hover: #ffe4a1;
+  --color-warning-text: #664700;
+  --color-success: #D8F3DA;
+  --color-success-hover: #bdebc0;
+  --color-success-text: #005416;
+  --color-info: #D5F1FA;
+  --color-info-hover: #b5e6f6;
+  --color-info-text: #0066AC;
+  --color-favorite: #A37200;
+  --color-mark: #fff0c7;
+  --color-background-selection: rgb(from var(--color-primary-element) r g b / 0.2);
+  --color-text-selection: var(--color-main-text);
+  /** @deprecated use css color functions */
+  --color-error-rgb: 255,231,231;
+  /** @deprecated use css color functions */
+  --color-warning-rgb: 255,238,197;
+  /** @deprecated use css color functions */
+  --color-success-rgb: 216,243,218;
+  /** @deprecated use css color functions */
+  --color-info-rgb: 213,241,250;
+  --color-loading-light: #cccccc;
+  --color-loading-dark: #444444;
+  --color-scrollbar: var(--color-border-maxcontrast) transparent;
+  --color-box-shadow-rgb: 77,77,77;
+  --color-box-shadow: rgba(var(--color-box-shadow-rgb), 0.5);
+  /* Assistant colors */
+  /* Background for AI generated content */
+  --color-background-assistant: #F6F5FF;
+  /* Border for AI generated content */
+  --color-border-assistant: linear-gradient(125deg, #7398FE 50%, #6104A4 125%);
+  /* Background for primary buttons to interact with the Assistant (e.g. generate content) */
+  --color-element-assistant: linear-gradient(214deg, #A569D3 12%, #00679E 39%, #422083 86%);
+  /* Icon color only to be used for the Assistant icon */
+  --color-element-assistant-icon: linear-gradient(214deg, #9669D3 15%, #00679E 40%, #492083 80%);
+  --font-face: system-ui, -apple-system, 'Segoe UI', Roboto, Oxygen-Sans, Cantarell, Ubuntu, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --default-font-size: 15px;
+  --font-size-small: 13px;
+  /* 1.5 x font-size for accessibility */
+  --default-line-height: 1.5;
+  --animation-quick: 100ms;
+  --animation-slow: 300ms;
+  /** Border width for input elements such as text fields and selects */
+  --border-width-input: 1px;
+  --border-width-input-focused: 2px;
 
-	/* Primary / brand */
-	--color-primary: #0082c9;
-	--color-primary-element: #0082c9;
-	--color-primary-element-hover: #006ba3;
-	--color-primary-element-light: #e6f2fa;
-	--color-primary-element-light-hover: #cce5f5;
-	--color-primary-element-light-text: #0082c9;
-	--color-primary-element-text: #ffffff;
-	--color-primary-text: #0082c9;
+  /* Border radii (new values) */
+  --border-radius-small: 4px; /* For smaller elements */
+  --border-radius-element: 8px; /* For interactive elements such as buttons, input, navigation and list items */
+  --border-radius-container: 12px; /* For smaller containers like action menus */
+  --border-radius-container-large: 16px; /* For larger containers like body or modals */
 
-	/* Borders */
-	--color-border: #d8d8d8;
-	--color-border-dark: #c8c8c8;
-	--color-border-maxcontrast: #767676;
+  /* Border radii (deprecated) */
+  --border-radius: var(--border-radius-small);
+  --border-radius-large: var(--border-radius-element);
+  --border-radius-rounded: 28px;
+  --border-radius-pill: 100px;
 
-	/* Text */
-	--color-text-maxcontrast: #6b6b6b;
-	--color-text-light: #999999;
+  --default-clickable-area: 34px;
+  --clickable-area-large: 48px;
+  --clickable-area-small: 24px;
+  --default-grid-baseline: 4px;
 
-	/* Semantic */
-	--color-error: #e9322d;
-	--color-error-hover: #cc2b26;
-	--color-error-text: #ffffff;
-	--color-warning: #eca700;
-	--color-warning-hover: #d49600;
-	--color-warning-text: #ffffff;
-	--color-success: #46ba61;
-	--color-success-hover: #3da354;
-	--color-success-text: #ffffff;
-	--color-info: #0082c9;
-	--color-info-text: #ffffff;
+  --header-height: 50px;
+  --header-menu-item-height: 44px;
+  --header-menu-icon-mask: linear-gradient(var(--color-background-plain-text) 25%, color-mix(in srgb, var(--color-background-plain-text), 55% transparent) 90%) alpha;
 
-	/* Sizing */
-	--border-radius: 3px;
-	--border-radius-large: 8px;
-	--border-radius-pill: 100px;
-	--border-radius-rounded: 50%;
-	--border-radius-element: 6px;
-	--default-clickable-area: 44px;
-	--default-grid-baseline: 4px;
-	--app-navigation-padding: 4px;
-	--app-navigation-width: 300px;
-
-	/* Typography */
-	--font-face: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell,
-		'Noto Sans', sans-serif;
-	--font-size: 15px;
+  --navigation-width: 300px;
+  --sidebar-min-width: 300px;
+  --sidebar-max-width: 500px;
+  --body-container-radius: var(--border-radius-container-large);
+  --body-container-margin: calc(var(--default-grid-baseline) * 2);
+  --body-height: calc(100% - env(safe-area-inset-bottom) - var(--header-height) - var(--body-container-margin));
+  --breakpoint-mobile: 1024px;
+  --background-invert-if-dark: no;
+  --background-invert-if-bright: invert(100%);
+  --background-image-invert-if-bright: no;
+  --primary-invert-if-bright: no;
+  --primary-invert-if-dark: invert(100%);
+  --color-primary: #00679e;
+  --color-primary-text: #ffffff;
+  --color-primary-hover: #3285b1;
+  --color-primary-element: #00679e;
+  --color-primary-element-hover: #00507a;
+  --color-primary-element-text: #ffffff;
+  --color-primary-element-text-dark: #ededed;
+  --color-primary-light: #e5eff5;
+  --color-primary-light-hover: #d9e3e8;
+  --color-primary-light-text: #00293f;
+  --color-primary-element-light: var(--color-primary-light);
+  --color-primary-element-light-text: var(--color-primary-light-text);
+  --color-primary-element-light-hover: var(--color-primary-light-hover);
+  --gradient-primary-background: linear-gradient(40deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  --color-background-plain: #00679e;
+  --color-background-plain-text: #ffffff;
+  --image-background: url('/apps/theming/img/background/jo-myoung-hee-fluid.webp');
 }
 
+/* Storybook baseline — not part of Nextcloud server */
 *,
 *::before,
 *::after {
@@ -68,7 +147,8 @@
 
 body {
 	font-family: var(--font-face);
-	font-size: var(--font-size);
+	font-size: var(--default-font-size);
+	line-height: var(--default-line-height);
 	color: var(--color-main-text);
 	background-color: var(--color-main-background);
 	margin: 0;
