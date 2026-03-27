@@ -153,3 +153,12 @@ body {
 	background-color: var(--color-main-background);
 	margin: 0;
 }
+
+/* #skip-actions is the Teleport target for NcContent's skip-navigation widget.
+ * On a real Nextcloud server it is positioned off-screen by server CSS and only
+ * becomes visible on :focus-within.  Replicate that here so it stays hidden. */
+#skip-actions {
+	position: fixed;
+	top: -9999px;
+	inset-inline-start: -9999px;
+}
