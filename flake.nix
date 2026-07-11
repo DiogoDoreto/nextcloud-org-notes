@@ -45,17 +45,16 @@
                   "vite.config.personal-settings.js"
                   "eslint.config.js"
                 ];
-                inAppDir = builtins.any (
-                  dir: builtins.match (".*/" + dir + "(/.*)?") name != null
-                ) appDirs;
+                inAppDir = builtins.any (dir: builtins.match (".*/" + dir + "(/.*)?") name != null) appDirs;
               in
               inAppDir || builtins.elem (builtins.baseNameOf name) rootFiles;
           };
 
           pnpmDeps = pkgs.fetchPnpmDeps {
             inherit (finalAttrs) pname version src;
-            fetcherVersion = 3;
-            hash = "sha256-yiZvvNx85fIdmHU03k4U+U/vTAeaDXZEaXeh1rSnU1w=";
+            pnpm = pkgs.pnpm;
+            fetcherVersion = 4;
+            hash = "sha256-5OvLfsw0LZgUfJeWbguWPmNONNlagCSl8SGxyqks1DU=";
           };
 
           nativeBuildInputs = [
