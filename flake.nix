@@ -4,6 +4,7 @@
     utils.url = "github:numtide/flake-utils";
     openspec = {
       url = "github:Fission-AI/OpenSpec";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     nextcloud-vue = {
       url = "github:nextcloud-libraries/nextcloud-vue";
