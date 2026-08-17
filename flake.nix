@@ -16,6 +16,22 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        nodejs = pkgs.nodejs_24;
+        pnpm = pkgs.pnpm.override { nodejs-slim = nodejs; };
+        openspec = inputs.openspec.packages.${system}.default.overrideAttrs (oldAttrs: {
+          pnpmDeps = pkgs.fetchPnpmDeps {
+            inherit (oldAttrs) pname version src;
+            inherit pnpm;
+            fetcherVersion = 4;
+            hash = "sha256-HuVltL2c+acN1KHDSRD1lZu+Rn92jO7yp1np1g0oQRw=";
+          };
+          nativeBuildInputs = [
+            nodejs
+            pkgs.npmHooks.npmInstallHook
+            pkgs.pnpmConfigHook
+            pnpm
+          ];
+        });
       in
       {
         packages.default = pkgs.stdenv.mkDerivation (finalAttrs: {
@@ -51,14 +67,14 @@
 
           pnpmDeps = pkgs.fetchPnpmDeps {
             inherit (finalAttrs) pname version src;
-            pnpm = pkgs.pnpm;
+            inherit pnpm;
             fetcherVersion = 4;
             hash = "sha256-c0aJKo8p4rhXua1K5Hi6rgSrqfY4ZmafxATGXMfc15c=";
           };
 
           nativeBuildInputs = [
-            pkgs.nodejs_22
-            pkgs.pnpm
+            nodejs
+            pnpm
             pkgs.pnpmConfigHook
           ];
 
@@ -77,11 +93,11 @@
         });
 
         devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            inputs.openspec.packages.${system}.default
-            php84
-            php84Packages.composer
-            nodejs_22
+          buildInputs = [
+            openspec
+            pkgs.php84
+            pkgs.php84Packages.composer
+            nodejs
             pnpm
           ];
           shellHook = ''
