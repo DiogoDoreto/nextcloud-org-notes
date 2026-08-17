@@ -4,7 +4,6 @@
     utils.url = "github:numtide/flake-utils";
     openspec = {
       url = "github:Fission-AI/OpenSpec";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     nextcloud-vue = {
       url = "github:nextcloud-libraries/nextcloud-vue";
@@ -54,7 +53,7 @@
             inherit (finalAttrs) pname version src;
             pnpm = pkgs.pnpm;
             fetcherVersion = 4;
-            hash = "sha256-5OvLfsw0LZgUfJeWbguWPmNONNlagCSl8SGxyqks1DU=";
+            hash = "sha256-c0aJKo8p4rhXua1K5Hi6rgSrqfY4ZmafxATGXMfc15c=";
           };
 
           nativeBuildInputs = [
